@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  problems CompanyProblem[]
+}
+
+model Problem {
+  id          Int        @id @default(autoincrement())
+  leetcodeId  String     @unique
+  title       String
+  slug        String     @unique
+  difficulty  Difficulty
+  leetcodeUrl String     @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  companies CompanyProblem[]
+}
+
+model CompanyProblem {
+  id        Int      @id @default(autoincrement())
+  companyId Int
+  problemId Int
+  createdAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, problemId])
+  @@index([problemId])
+}
