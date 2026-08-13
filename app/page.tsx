@@ -48,22 +48,32 @@ export default function Home() {
             <Image
               className="dark:invert h-[14px] w-4"
               src="/vercel.svg"
-              alt="Vercel logomark"
+              alt="Vercel"
               width={16}
-              height={14}
+              height={16}
             />
-            Deploy Now
+            Deploy now
           </a>
           <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-solid border-black/[.08] px-5 text-sm transition-colors hover:border-transparent hover:bg-[#f2f2f2] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] dark:hover:border-transparent md:w-[196px]"
           >
-            Documentation
+            Read our docs
           </a>
         </div>
       </main>
+      <footer className="flex w-full max-w-3xl flex-col items-center justify-between gap-6 py-16 text-center text-sm font-medium sm:flex-row sm:text-left dark:text-zinc-400">
+        <p>
+          This is a project starter from{" "}
+          <a
+            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            className="underline dark:text-zinc-100"
+          >
+            Next.js
+          </a>
+          . Build something great!
+        </p>
+      </footer>
     </div>
   );
 }

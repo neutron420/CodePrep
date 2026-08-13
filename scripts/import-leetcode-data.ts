@@ -9,6 +9,7 @@ import {
   upsertCompanies,
   upsertProblems,
   upsertRelationships,
+  upsertTopics,
   type ImportCounters,
   type RawProblem,
 } from "./lib/import-data";
@@ -33,6 +34,9 @@ function formatCounters(counters: ImportCounters): void {
   log(`Problems reused     : ${counters.problemsReused}`);
   log(`Relationships made  : ${counters.relationshipsCreated}`);
   log(`Relationships skipped: ${counters.relationshipsSkipped}`);
+  log(`Topics created      : ${counters.topicsCreated}`);
+  log(`Topic links created : ${counters.topicLinksCreated}`);
+  log(`Topic links skipped : ${counters.topicLinksSkipped}`);
   log(`Rows parsed         : ${counters.rowsParsed}`);
   log(`Rows invalid        : ${counters.rowsInvalid}`);
   log(`CSV files failed    : ${counters.csvFilesFailed}`);
@@ -115,6 +119,14 @@ async function importData(dataDir: string): Promise<void> {
   counters.relationshipsCreated = relationshipsResult.created;
   counters.relationshipsSkipped = relationshipsResult.skipped;
   log(`Relationships created: ${relationshipsResult.created}, skipped: ${relationshipsResult.skipped}.`);
+
+  log("");
+  log("Upserting topics...");
+  const topicsResult = await upsertTopics(allProblems, problemsResult.bySlug);
+  counters.topicsCreated = topicsResult.topicsCreated;
+  counters.topicLinksCreated = topicsResult.topicLinksCreated;
+  counters.topicLinksSkipped = topicsResult.topicLinksSkipped;
+  log(`Topics created: ${topicsResult.topicsCreated}, links created: ${topicsResult.topicLinksCreated}, links skipped: ${topicsResult.topicLinksSkipped}.`);
 
   formatCounters(counters);
 }
