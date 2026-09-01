@@ -35,7 +35,6 @@ model Problem {
 
   companies CompanyProblem[]
   topics    ProblemTopic[]
-  solvedBy  SolvedProblem[]
 
   @@index([difficulty])
 }
@@ -72,29 +71,4 @@ model ProblemTopic {
 
   @@unique([problemId, topicId])
   @@index([topicId])
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  clerkId   String   @unique
-  email     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  solvedProblems SolvedProblem[]
-
-  @@index([clerkId])
-}
-
-model SolvedProblem {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  problemId Int
-  solvedAt  DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, problemId])
-  @@index([problemId])
 }
