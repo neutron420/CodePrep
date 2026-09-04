@@ -40,10 +40,17 @@ export function CompanyLogo({ name, className = "size-5", showTooltip = false, p
       sources.push(hardcoded);
     }
 
-    // Google S2 Favicons - primary source (always reliable, 128px)
-    sources.push(
-      `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
-    );
+    // 1. Google S2 Favicons (128px HD)
+    sources.push(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
+
+    // 2. Unavatar (High quality domain icons)
+    sources.push(`https://unavatar.io/${domain}`);
+
+    // 3. Clearbit Logo API
+    sources.push(`https://logo.clearbit.com/${domain}`);
+
+    // 4. Icon Horse API
+    sources.push(`https://icon.horse/icon/${domain}`);
 
     return sources;
   }, [domain, slug]);
