@@ -1,25 +1,18 @@
 "use client";
+
 import Link from "next/link";
-const LogoIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={`size-6 ${className ?? ""}`}
-    viewBox="0 0 28 28"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-label="logo icon">
-    <rect x="0.75" y="0.75" width="26.5" height="26.5" rx="5.25" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M8 7.5v13M8 14l6.5-6.5M8 14l7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { KodePrepLogo } from "@/components/kodeprep-logo";
 import React from "react";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
-  { name: "Features", href: "#features" },
-  { name: "Topics", href: "#topics" },
-  { name: "FAQs", href: "#faqs" },
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "Problems", href: "/dashboard" },
+  { name: "Features", href: "/#features" },
+  { name: "Topics", href: "/#topics" },
+  { name: "FAQs", href: "/#faqs" },
 ];
 
 export const HeroHeader = () => {
@@ -51,14 +44,7 @@ export const HeroHeader = () => {
             )}
           >
             <div className="flex w-full justify-between gap-6 lg:w-auto">
-              <Link
-                href="/"
-                aria-label="home"
-                className="flex items-center space-x-2"
-              >
-                <LogoIcon />
-                <span className="font-serif text-lg font-medium">KodePrep</span>
-              </Link>
+              <KodePrepLogo />
 
               <button
                 onClick={() => setMenuState(!menuState)}
@@ -98,7 +84,7 @@ export const HeroHeader = () => {
                 </ul>
               </div>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                <Button size="sm" render={<Link href="#features" />} nativeButton={false}>
+                <Button size="sm" render={<Link href="/dashboard" />} nativeButton={false}>
                   <span>Start Practicing</span>
                 </Button>
               </div>

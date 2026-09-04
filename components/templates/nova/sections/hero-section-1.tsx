@@ -41,7 +41,7 @@ export default function HeroSection() {
                   Tick off what you solve.
                 </p>
 
-                <Button className="mt-6 pr-1.5" render={<Link href="#features" />} nativeButton={false}>
+                <Button className="mt-6 pr-1.5 cursor-pointer" render={<Link href="/dashboard" />} nativeButton={false}>
                   <span className="text-nowrap">Start Practicing</span>
                   <ChevronRight className="opacity-50" />
                 </Button>

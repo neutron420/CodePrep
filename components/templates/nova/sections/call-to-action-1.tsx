@@ -15,7 +15,7 @@ export default function CallToAction() {
             company and start solving.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button className="pr-1.5" render={<Link href="#features" />} nativeButton={false}>
+            <Button className="pr-1.5 cursor-pointer" render={<Link href="/dashboard" />} nativeButton={false}>
               <span>Browse Companies</span>
               <ChevronRight className="opacity-50" />
             </Button>

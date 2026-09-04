@@ -95,6 +95,17 @@ export function findProblemsForCompany(companyId: number, params: CompanyProblem
               topic: { select: { name: true } },
             },
           },
+          companies: {
+            select: {
+              company: {
+                select: {
+                  name: true,
+                  slug: true,
+                },
+              },
+            },
+            take: 6,
+          },
         },
       },
     },

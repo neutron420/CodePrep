@@ -1,0 +1,75 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { getCompanyDomain, HARDCODED_LOGOS } from "@/lib/company-domains";
+
+interface CompanyLogoProps {
+  name: string;
+  className?: string;
+}
+
+function stringToColor(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 65%, 45%)`;
+}
+
+function nameToSlug(name: string): string {
+  return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
+}
+
+export function CompanyLogo({ name, className = "size-5" }: CompanyLogoProps) {
+  const [sourceIndex, setSourceIndex] = useState(0);
+
+  const domain = useMemo(() => getCompanyDomain(name), [name]);
+  const slug = useMemo(() => nameToSlug(name), [name]);
+
+  const logoSources = useMemo(() => {
+    const sources: string[] = [];
+
+    // Check hardcoded logos first (guaranteed to work for TCS, HCL, ByteDance etc.)
+    const hardcoded = HARDCODED_LOGOS[slug];
+    if (hardcoded) {
+      sources.push(hardcoded);
+    }
+
+    // Google S2 Favicons - primary source (always reliable, 128px)
+    sources.push(
+      `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+    );
+
+    return sources;
+  }, [domain, slug]);
+
+  const initial = name.charAt(0).toUpperCase();
+  const bgColor = useMemo(() => stringToColor(name), [name]);
+
+  const currentSource = logoSources[sourceIndex];
+
+  if (!currentSource || sourceIndex >= logoSources.length) {
+    return (
+      <div
+        className={`rounded-md font-bold text-white flex items-center justify-center shrink-0 uppercase shadow-2xs select-none ${className}`}
+        style={{ backgroundColor: bgColor }}
+      >
+        {initial}
+      </div>
+    );
+  }
+
+  return (
+    <div className={`relative flex items-center justify-center rounded-md overflow-hidden bg-white/90 shrink-0 border border-border/40 ${className}`}>
+      <img
+        key={`${domain}-${sourceIndex}`}
+        src={currentSource}
+        alt={`${name} logo`}
+        onError={() => setSourceIndex((prev) => prev + 1)}
+        className="size-full object-contain p-0.5 rounded-md"
+        loading="lazy"
+      />
+    </div>
+  );
+}

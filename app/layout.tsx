@@ -1,22 +1,12 @@
-// For adding custom fonts with other frameworks, see:
-// https://tailwindcss.com/docs/font-family
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Lora, Roboto_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-});
-
-const fontSerif = Lora({
-  subsets: ["latin"],
-  variable: "--font-serif",
-});
-
-const fontMono = Roboto_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,10 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${fontSans.variable} antialiased`}>
+        <TooltipProvider>{children}</TooltipProvider>
       </body>
     </html>
   );

@@ -2,15 +2,26 @@ import { Card } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 
 export default async function Topics() {
-  const [topics, companyCount, problemCount] = await Promise.all([
-    prisma.topic.findMany({
+  let topics: { id: number; name: string; _count: { problems: number } }[] = [];
+  let companyCount = 470;
+  let problemCount = 3257;
+
+  try {
+    const topicsResult = await prisma.topic.findMany({
       select: { id: true, name: true, _count: { select: { problems: true } } },
       orderBy: { problems: { _count: "desc" } },
       take: 12,
-    }),
-    prisma.company.count(),
-    prisma.problem.count(),
-  ]);
+    });
+    topics = topicsResult;
+
+    const cCount = await prisma.company.count();
+    if (cCount) companyCount = cCount;
+
+    const pCount = await prisma.problem.count();
+    if (pCount) problemCount = pCount;
+  } catch (error) {
+    console.warn("Error fetching topics from DB in landing page:", error);
+  }
 
   return (
     <section id="topics" className="bg-background @container py-24">

@@ -1,16 +1,5 @@
 import Link from 'next/link'
-
-const Logo = ({ className }: { className?: string }) => (
-    <svg
-        className={`text-foreground size-6 ${className ?? ""}`}
-        viewBox="0 0 28 28"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-label="KodePrep logo">
-        <rect x="0.75" y="0.75" width="26.5" height="26.5" rx="5.25" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M8 7.5v13M8 14l6.5-6.5M8 14l7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-);
+import { KodePrepLogo } from '@/components/kodeprep-logo'
 
 const links = {
     product: [
@@ -43,12 +32,7 @@ export default function Footer() {
             <div className="mx-auto max-w-2xl px-6">
                 <div className="@sm:grid-cols-3 grid grid-cols-2 gap-8">
                     <div className="col-span-full">
-                        <Link
-                            href="/"
-                            className="flex items-center gap-2">
-                            <Logo className="size-6" />
-                            <span className="text-foreground font-serif text-lg font-medium">KodePrep</span>
-                        </Link>
+                        <KodePrepLogo />
                         <p className="text-muted-foreground mt-4 max-w-xs text-sm">Company-wise coding interview prep. Practice real questions, track your progress.</p>
                     </div>
                     <div>
