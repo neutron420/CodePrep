@@ -5,6 +5,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Separator } from "@/components/ui/separator";
 import { findCompanyBySlug, findProblemsForCompany } from "@/lib/repositories/company.repository";
 import { prisma } from "@/lib/prisma";
+import { withDbRetry } from "@/lib/db-retry";
 import { ProblemItem } from "@/types/problem";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -13,7 +14,7 @@ import { Button } from "@/components/ui/button";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Company Interview Dashboard - KodePrep",
+  title: "Company Interview Dashboard — CodeCraft",
   description: "Browse LeetCode interview questions by FAANG, HFT, Service-based, and Product companies.",
 };
 
@@ -49,15 +50,17 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   // 1. Fetch all companies for sidebar
   let allCompaniesRaw: { id: number; name: string; slug: string; _count: { problems: number } }[] = [];
   try {
-    allCompaniesRaw = await prisma.company.findMany({
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        _count: { select: { problems: true } },
-      },
-      orderBy: { problems: { _count: "desc" } },
-    });
+    allCompaniesRaw = await withDbRetry(() =>
+      prisma.company.findMany({
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          _count: { select: { problems: true } },
+        },
+        orderBy: { problems: { _count: "desc" } },
+      })
+    );
   } catch (err) {
     console.warn("Failed to fetch sidebar companies in dashboard:", err);
   }
@@ -135,7 +138,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem className="hidden sm:inline-flex">
-                <BreadcrumbLink render={<Link href="/" />}>KodePrep</BreadcrumbLink>
+                <BreadcrumbLink render={<Link href="/" />}>CodeCraft</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden sm:inline-block" />
               <BreadcrumbItem>

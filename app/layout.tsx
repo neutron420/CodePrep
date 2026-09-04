@@ -10,7 +10,7 @@ const fontSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "KodePrep Company-wise Coding Interview Prep",
+  title: "CodeCraft Company-wise Coding Interview Prep",
   description: "Practice LeetCode problems by company, filter by topic, and track your solved progress.",
 };
 

@@ -10,7 +10,7 @@ import Topics from "@/components/templates/nova/sections/topics-1";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "KodePrep Company-wise Coding Interview Prep",
+  title: "CodeCraft — Company-wise Coding Interview Prep",
   description:
     "Practice LeetCode problems by company, filter by topic, and track your solved progress.",
 };

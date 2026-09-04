@@ -1,6 +1,7 @@
 import type { Difficulty } from "../../app/generated/prisma/enums";
 
 import { prisma } from "../prisma";
+import { withDbRetry } from "../db-retry";
 
 export interface ProblemListParams {
   search?: string;
@@ -23,55 +24,59 @@ export function findProblems(params: ProblemListParams) {
 
   const orderBy = sort === "difficulty" ? { difficulty: order } : { title: order };
 
-  return prisma.problem.findMany({
-    where: buildProblemWhere(params),
-    orderBy,
-    skip: (page - 1) * limit,
-    take: limit,
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      difficulty: true,
-      leetcodeUrl: true,
-      topics: {
-        select: {
-          topic: { select: { name: true } },
+  return withDbRetry(() =>
+    prisma.problem.findMany({
+      where: buildProblemWhere(params),
+      orderBy,
+      skip: (page - 1) * limit,
+      take: limit,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        difficulty: true,
+        leetcodeUrl: true,
+        topics: {
+          select: {
+            topic: { select: { name: true } },
+          },
         },
       },
-    },
-  });
+    })
+  );
 }
 
 export function countProblems(params: Pick<ProblemListParams, "search" | "difficulty">) {
-  return prisma.problem.count({ where: buildProblemWhere(params) });
+  return withDbRetry(() => prisma.problem.count({ where: buildProblemWhere(params) }));
 }
 
 export function findProblemBySlug(slug: string) {
-  return prisma.problem.findUnique({
-    where: { slug },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      difficulty: true,
-      leetcodeUrl: true,
-      topics: {
-        select: {
-          topic: { select: { name: true } },
+  return withDbRetry(() =>
+    prisma.problem.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        difficulty: true,
+        leetcodeUrl: true,
+        topics: {
+          select: {
+            topic: { select: { id: true, name: true } },
+          },
         },
-      },
-      companies: {
-        select: {
-          company: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
+        companies: {
+          select: {
+            company: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
             },
           },
         },
       },
-    },
-  });
+    })
+  );
 }

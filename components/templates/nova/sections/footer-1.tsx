@@ -79,7 +79,7 @@ export default function Footer() {
                     </div>
                 </div>
                 <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t pt-8">
-                    <p className="text-muted-foreground text-sm">&copy; {2026} KodePrep. All rights reserved.</p>
+                    <p className="text-muted-foreground text-sm">&copy; {2026} CodeCraft. All rights reserved.</p>
                     <div className="flex gap-4">
                         {links.legal.map((link) => (
                             <Link

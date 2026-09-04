@@ -9,23 +9,29 @@ export function KodePrepLogo({ className, imageClassName }: KodePrepLogoProps) {
   return (
     <Link
       href="/"
-      className={`inline-flex items-center group select-none ${className ?? ""}`}
+      className={`inline-flex items-center group select-none shrink-0 ${className ?? ""}`}
     >
-      <img
-        src="/logo.jpeg"
-        alt="Logo"
-        className={`h-8 sm:h-9 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform ${imageClassName ?? ""}`}
-      />
+      <span className="h-10 sm:h-12 w-[150px] sm:w-[180px] overflow-hidden inline-flex items-center justify-start">
+        <img
+          src="/kodeprep-site-logo.png"
+          alt="CodeCraft"
+          className={`h-[110px] sm:h-[130px] w-auto object-contain object-center group-hover:scale-105 transition-transform ${imageClassName ?? ""}`}
+        />
+      </span>
     </Link>
   );
 }
 
 export function KodePrepLogoIcon({ className }: { className?: string }) {
   return (
-    <img
-      src="/logo.jpeg"
-      alt="Logo Icon"
-      className={`size-7 sm:size-8 object-contain rounded-md ${className ?? ""}`}
-    />
+    <span className={`h-9 w-[130px] overflow-hidden inline-flex items-center justify-start ${className ?? ""}`}>
+      <img
+        src="/kodeprep-site-logo.png"
+        alt="CodeCraft Icon"
+        className="h-[100px] w-auto object-contain object-center"
+      />
+    </span>
   );
 }
+
+

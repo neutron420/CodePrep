@@ -18,7 +18,7 @@ const faqItems = [
     id: "item-2",
     question: "Do I need an account?",
     answer:
-      "No. KodePrep is completely open - there is no sign-up, no login, and nothing to install. Browse any company list and start solving immediately.",
+      "No. CodeCraft is completely open - there is no sign-up, no login, and nothing to install. Browse any company list and start solving immediately.",
   },
   {
     id: "item-3",
