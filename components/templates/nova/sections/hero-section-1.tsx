@@ -47,7 +47,7 @@ export default function HeroSection() {
                 </Button>
               </div>
               <div className="mx-auto mt-24 max-w-xl">
-                <div className="grid scale-95 grid-cols-3 gap-12">
+                <div className="grid scale-95 grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 md:gap-12">
                   <div className="ml-auto blur-[2px]">
                     <Card className="shadow-foreground/10 flex h-8 w-fit flex-row items-center gap-2 rounded-xl px-3 sm:h-10 sm:px-4">
                       <Codeforces className="size-4 shrink-0" />

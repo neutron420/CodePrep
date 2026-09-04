@@ -20,7 +20,7 @@ export default function Features() {
             your progress.
           </p>
         </div>
-        <div className="@xl:grid-cols-2 mt-12 grid gap-3 *:p-6">
+        <div className="grid-cols-1 sm:grid-cols-2 mt-12 grid gap-4 *:p-5 sm:*:p-6">
           <Card className="row-span-2 grid grid-rows-subgrid">
             <div className="space-y-2">
               <h3 className="text-foreground font-medium">

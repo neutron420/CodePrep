@@ -75,6 +75,7 @@ export const HeroHeader = () => {
                     <li key={index}>
                       <Link
                         href={item.href}
+                        onClick={() => setMenuState(false)}
                         className="text-muted-foreground hover:text-accent-foreground block duration-150"
                       >
                         <span>{item.name}</span>
@@ -84,7 +85,7 @@ export const HeroHeader = () => {
                 </ul>
               </div>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                <Button size="sm" render={<Link href="/dashboard" />} nativeButton={false}>
+                <Button size="sm" onClick={() => setMenuState(false)} render={<Link href="/dashboard" />} nativeButton={false}>
                   <span>Start Practicing</span>
                 </Button>
               </div>

@@ -6,6 +6,7 @@ import { useSolvedProblems } from "@/lib/hooks/use-solved-problems";
 import { Card } from "@/components/ui/card";
 import { ProblemItem } from "@/types/problem";
 import { CompanyLogo } from "@/components/company-logo";
+import { CompanyTooltip } from "@/components/company-tooltip";
 import { LeetCode } from "@/components/templates/nova/svgs/leetcode";
 
 const BADGE_COLOR_PALETTES = [
@@ -96,12 +97,14 @@ export function CompanyProblemGrid({ problems, companyName }: CompanyProblemGrid
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 relative">
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Company Logo - smaller on mobile */}
-            <CompanyLogo name={companyName} className="size-12 sm:size-16 text-xl sm:text-2xl shadow-sm rounded-xl border border-border/80" />
+            {/* Company Logo - smaller on mobile with interactive tooltip */}
+            <CompanyLogo name={companyName} showTooltip problemCount={problems.length} className="size-12 sm:size-16 text-xl sm:text-2xl shadow-sm rounded-xl border border-border/80 cursor-pointer transition-transform hover:scale-105" />
             <div className="min-w-0 flex-1">
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-serif font-bold text-foreground leading-tight truncate">
-                {companyName} Interview Problems
-              </h1>
+              <CompanyTooltip name={companyName} problemCount={problems.length} side="bottom" align="start">
+                <h1 className="text-lg sm:text-2xl md:text-3xl font-serif font-bold text-foreground leading-tight truncate hover:text-primary transition-colors cursor-pointer">
+                  {companyName} Interview Problems
+                </h1>
+              </CompanyTooltip>
               <p className="text-[11px] sm:text-xs text-muted-foreground mt-1 flex items-center gap-1.5 font-medium">
                 <LeetCode className="size-3.5 sm:size-4 shrink-0" />
                 <span>{problems.length.toLocaleString()} questions tagged</span>
@@ -260,9 +263,12 @@ export function CompanyProblemGrid({ problems, companyName }: CompanyProblemGrid
                       <span className="text-[10px] font-medium text-muted-foreground">Asked by:</span>
                       <div className="flex items-center gap-1 sm:gap-1.5">
                         {p.companiesAsking.slice(0, 4).map((c, idx) => (
-                          <div key={idx} title={c.name} className="inline-block">
-                            <CompanyLogo name={c.name} className="size-5 sm:size-6 text-[9px] sm:text-xs rounded-md border border-border/60" />
-                          </div>
+                          <CompanyLogo
+                            key={idx}
+                            name={c.name}
+                            showTooltip
+                            className="size-5 sm:size-6 text-[9px] sm:text-xs rounded-md border border-border/60 cursor-pointer hover:scale-110 transition-transform"
+                          />
                         ))}
                       </div>
                     </div>
@@ -343,7 +349,12 @@ export function CompanyProblemGrid({ problems, companyName }: CompanyProblemGrid
                     <td className="py-3 px-3 sm:px-4">
                       <div className="flex items-center gap-1">
                         {p.companiesAsking?.slice(0, 3).map((c, idx) => (
-                          <CompanyLogo key={idx} name={c.name} className="size-5 text-[9px] rounded-md" />
+                          <CompanyLogo
+                            key={idx}
+                            name={c.name}
+                            showTooltip
+                            className="size-5 text-[9px] rounded-md cursor-pointer hover:scale-110 transition-transform"
+                          />
                         ))}
                       </div>
                     </td>

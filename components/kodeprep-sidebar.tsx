@@ -219,7 +219,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                               }`}
                             >
                               <div className="flex items-center gap-2 truncate">
-                                <CompanyLogo name={company.name} className="size-5 text-[10px] rounded-md" />
+                                <CompanyLogo name={company.name} showTooltip problemCount={company.problemCount} className="size-5 text-[10px] rounded-md" />
                                 <span className="truncate font-sans font-medium">{company.name}</span>
                               </div>
                               <span
@@ -278,7 +278,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                             }`}
                           >
                             <div className="flex items-center gap-2 truncate">
-                              <CompanyLogo name={company.name} className="size-5 text-[10px] rounded-md" />
+                              <CompanyLogo name={company.name} showTooltip problemCount={company.problemCount} className="size-5 text-[10px] rounded-md" />
                               <span className="truncate font-sans font-medium">{company.name}</span>
                             </div>
                             <span

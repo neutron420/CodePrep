@@ -3,9 +3,13 @@
 import { useState, useMemo } from "react";
 import { getCompanyDomain, HARDCODED_LOGOS } from "@/lib/company-domains";
 
+import { CompanyTooltip } from "@/components/company-tooltip";
+
 interface CompanyLogoProps {
   name: string;
   className?: string;
+  showTooltip?: boolean;
+  problemCount?: number;
 }
 
 function stringToColor(str: string) {
@@ -21,7 +25,7 @@ function nameToSlug(name: string): string {
   return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
 }
 
-export function CompanyLogo({ name, className = "size-5" }: CompanyLogoProps) {
+export function CompanyLogo({ name, className = "size-5", showTooltip = false, problemCount }: CompanyLogoProps) {
   const [sourceIndex, setSourceIndex] = useState(0);
 
   const domain = useMemo(() => getCompanyDomain(name), [name]);
@@ -49,18 +53,14 @@ export function CompanyLogo({ name, className = "size-5" }: CompanyLogoProps) {
 
   const currentSource = logoSources[sourceIndex];
 
-  if (!currentSource || sourceIndex >= logoSources.length) {
-    return (
-      <div
-        className={`rounded-md font-bold text-white flex items-center justify-center shrink-0 uppercase shadow-2xs select-none ${className}`}
-        style={{ backgroundColor: bgColor }}
-      >
-        {initial}
-      </div>
-    );
-  }
-
-  return (
+  const logoElement = (!currentSource || sourceIndex >= logoSources.length) ? (
+    <div
+      className={`rounded-md font-bold text-white flex items-center justify-center shrink-0 uppercase shadow-2xs select-none ${className}`}
+      style={{ backgroundColor: bgColor }}
+    >
+      {initial}
+    </div>
+  ) : (
     <div className={`relative flex items-center justify-center rounded-md overflow-hidden bg-white/90 shrink-0 border border-border/40 ${className}`}>
       <img
         key={`${domain}-${sourceIndex}`}
@@ -72,4 +72,10 @@ export function CompanyLogo({ name, className = "size-5" }: CompanyLogoProps) {
       />
     </div>
   );
+
+  if (showTooltip) {
+    return <CompanyTooltip name={name} problemCount={problemCount}>{logoElement}</CompanyTooltip>;
+  }
+
+  return logoElement;
 }
