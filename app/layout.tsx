@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-const fontSans = Plus_Jakarta_Sans({
+const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",

@@ -18,6 +18,8 @@ export const metadata = {
   description: "Browse LeetCode interview questions by FAANG, HFT, Service-based, and Product companies.",
 };
 
+import { NavbarSearch } from "@/components/navbar-search";
+
 interface PageProps {
   searchParams: Promise<{
     company?: string;
@@ -130,30 +132,38 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
       {/* Main Content Area */}
       <SidebarInset>
-        {/* Header with Breadcrumb & Sidebar Toggle */}
-        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur-md px-4 sm:px-6">
-          <SidebarTrigger className="-ml-1" />
-          <Separator orientation="vertical" className="mr-2 h-4" />
+        {/* Header with Breadcrumb, Sidebar Toggle, Navbar Search & Back */}
+        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between gap-2 border-b bg-background/95 backdrop-blur-md px-3 sm:px-6">
+          <div className="flex items-center gap-2 min-w-0">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-1 sm:mr-2 h-4" />
 
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden sm:inline-flex">
-                <BreadcrumbLink render={<Link href="/" />}>CodeCraft</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden sm:inline-block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="font-semibold text-primary">
-                  {activeCompany.name}
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+            <Breadcrumb className="min-w-0">
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:inline-flex">
+                  <BreadcrumbLink render={<Link href="/" />}>CodeCraft</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:inline-block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="font-semibold text-primary max-w-[100px] xs:max-w-[140px] sm:max-w-xs truncate text-xs sm:text-sm">
+                    {activeCompany.name}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
 
-          <div className="ml-auto flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+            {/* Quick Search across all 694 companies in Navbar */}
+            <NavbarSearch
+              companies={sidebarCompanies}
+              currentCompanySlug={activeCompany.slug}
+            />
+
             <Link href="/">
-              <Button variant="outline" size="sm" className="gap-1.5 font-medium cursor-pointer shadow-2xs hover:bg-muted">
+              <Button variant="outline" size="sm" className="gap-1.5 font-medium cursor-pointer shadow-2xs hover:bg-muted text-xs h-8 px-2.5 sm:px-3">
                 <ArrowLeft className="size-3.5" />
-                <span>Back</span>
+                <span className="hidden xs:inline sm:inline">Back</span>
               </Button>
             </Link>
           </div>
@@ -164,6 +174,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           <CompanyProblemGrid
             problems={problems}
             companyName={activeCompany.name}
+            companySlug={activeCompany.slug}
           />
         </div>
       </SidebarInset>

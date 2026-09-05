@@ -46,5 +46,8 @@ next-env.d.ts
 /data
 
 # scratch
+scratch/
+/scratch/
 scratch_*
 *.scratch.*
+

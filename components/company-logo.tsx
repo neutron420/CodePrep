@@ -40,14 +40,14 @@ export function CompanyLogo({ name, className = "size-5", showTooltip = false, p
       sources.push(hardcoded);
     }
 
-    // 1. Google S2 Favicons (128px HD)
-    sources.push(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
-
-    // 2. Unavatar (High quality domain icons)
+    // 1. Unavatar (Vector and HD logos)
     sources.push(`https://unavatar.io/${domain}`);
 
-    // 3. Clearbit Logo API
+    // 2. Clearbit Logo API (High res brand logos)
     sources.push(`https://logo.clearbit.com/${domain}`);
+
+    // 3. Google S2 Favicons (128px HD)
+    sources.push(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
 
     // 4. Icon Horse API
     sources.push(`https://icon.horse/icon/${domain}`);
@@ -62,19 +62,19 @@ export function CompanyLogo({ name, className = "size-5", showTooltip = false, p
 
   const logoElement = (!currentSource || sourceIndex >= logoSources.length) ? (
     <div
-      className={`rounded-md font-bold text-white flex items-center justify-center shrink-0 uppercase shadow-2xs select-none ${className}`}
+      className={`rounded-2xl font-bold text-white flex items-center justify-center shrink-0 uppercase shadow-2xs select-none ${className}`}
       style={{ backgroundColor: bgColor }}
     >
       {initial}
     </div>
   ) : (
-    <div className={`relative flex items-center justify-center rounded-md overflow-hidden bg-white/90 shrink-0 border border-border/40 ${className}`}>
+    <div className={`relative flex items-center justify-center rounded-2xl overflow-hidden bg-white shrink-0 border border-border/40 ${className}`}>
       <img
         key={`${domain}-${sourceIndex}`}
         src={currentSource}
         alt={`${name} logo`}
         onError={() => setSourceIndex((prev) => prev + 1)}
-        className="size-full object-contain p-0.5 rounded-md"
+        className="size-full object-contain p-1 rounded-xl"
         loading="lazy"
       />
     </div>

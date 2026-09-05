@@ -20,7 +20,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
-  Search,
   ChevronRight,
   Building2,
   Flame,
@@ -34,6 +33,15 @@ import {
   ShoppingBag,
   Gamepad2,
   Activity,
+  Sparkles,
+  ShieldCheck,
+  Car,
+  UtensilsCrossed,
+  MessageSquare,
+  GraduationCap,
+  Compass,
+  Radio,
+  Zap,
 } from "lucide-react";
 import { COMPANY_CATEGORIES, CompanyCategoryDef } from "@/lib/company-categories";
 import { CompanyLogo } from "@/components/company-logo";
@@ -43,6 +51,8 @@ function CategoryIcon({ name }: { name: CompanyCategoryDef["iconName"] | string 
   switch (name) {
     case "Flame":
       return <Flame className="size-4 text-rose-500" />;
+    case "Sparkles":
+      return <Sparkles className="size-4 text-fuchsia-500" />;
     case "TrendingUp":
       return <TrendingUp className="size-4 text-amber-500" />;
     case "Landmark":
@@ -51,16 +61,32 @@ function CategoryIcon({ name }: { name: CompanyCategoryDef["iconName"] | string 
       return <Crown className="size-4 text-purple-500" />;
     case "Cloud":
       return <Cloud className="size-4 text-sky-500" />;
+    case "ShieldCheck":
+      return <ShieldCheck className="size-4 text-teal-500" />;
     case "Cpu":
       return <Cpu className="size-4 text-indigo-500" />;
     case "ShoppingBag":
       return <ShoppingBag className="size-4 text-pink-500" />;
+    case "Car":
+      return <Car className="size-4 text-blue-600" />;
+    case "UtensilsCrossed":
+      return <UtensilsCrossed className="size-4 text-orange-500" />;
+    case "MessageSquare":
+      return <MessageSquare className="size-4 text-cyan-500" />;
     case "Gamepad2":
       return <Gamepad2 className="size-4 text-violet-500" />;
     case "Activity":
       return <Activity className="size-4 text-rose-600" />;
     case "Briefcase":
       return <Briefcase className="size-4 text-blue-500" />;
+    case "GraduationCap":
+      return <GraduationCap className="size-4 text-yellow-500" />;
+    case "Compass":
+      return <Compass className="size-4 text-emerald-600" />;
+    case "Radio":
+      return <Radio className="size-4 text-violet-600" />;
+    case "Zap":
+      return <Zap className="size-4 text-amber-600" />;
     default:
       return <Building2 className="size-4 text-cyan-500" />;
   }
@@ -92,7 +118,6 @@ interface KodePrepSidebarProps {
 }
 
 export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSidebarProps) {
-  const [search, setSearch] = useState("");
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
   const router = useRouter();
 
@@ -130,64 +155,26 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
     };
   }, [companies]);
 
-  // Filter items by search query
-  const filteredData = useMemo(() => {
-    if (!search.trim()) {
-      return categorizedCompanies;
-    }
-
-    const query = search.toLowerCase();
-
-    const categories = categorizedCompanies.categories.map((cat) => ({
-      ...cat,
-      items: cat.items.filter(
-        (c) =>
-          c.name.toLowerCase().includes(query) || c.slug.toLowerCase().includes(query)
-      ),
-    }));
-
-    const otherItems = categorizedCompanies.otherItems.filter(
-      (c) =>
-        c.name.toLowerCase().includes(query) || c.slug.toLowerCase().includes(query)
-    );
-
-    return { categories, otherItems };
-  }, [categorizedCompanies, search]);
-
   const selectCompany = (slug: string) => {
     router.push(`/dashboard?company=${slug}`);
   };
 
   return (
     <Sidebar collapsible="offcanvas" className="border-r border-border bg-sidebar">
-      {/* Header / Brand Logo + Close Button */}
-      <SidebarHeader className="p-4 border-b">
-        <div className="flex items-center justify-between">
-          <KodePrepLogo className="px-1" />
+      {/* Header / Brand Logo + Close Button - Exactly matches Navbar height h-14 & 18px horizontal alignment */}
+      <SidebarHeader className="h-14 flex-row items-center justify-between p-0 px-[18px] border-b border-border shrink-0">
+        <KodePrepLogo />
 
-          {/* Close (X) Button */}
-          <SidebarCloseButton />
-        </div>
-
-        {/* Sidebar Search Bar */}
-        <div className="relative mt-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search company..."
-            className="w-full pl-8 pr-3 py-1.5 rounded-lg border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all placeholder:text-muted-foreground"
-          />
-        </div>
+        {/* Close (X) Button */}
+        <SidebarCloseButton />
       </SidebarHeader>
 
       {/* Content / Categories */}
       <SidebarContent className="px-2 py-3 space-y-2">
         {/* Categorized Groups */}
-        {filteredData.categories.map((category) => {
-          if (category.items.length === 0 && search) return null;
-          const isOpen = Boolean(search) || (openCategories[category.id] ?? false);
+        {categorizedCompanies.categories.map((category) => {
+          if (category.items.length === 0) return null;
+          const isOpen = openCategories[category.id] ?? false;
 
           return (
             <Collapsible key={category.id} open={isOpen} onOpenChange={() => toggleCategory(category.id)} className="group/collapsible">
@@ -219,7 +206,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                               }`}
                             >
                               <div className="flex items-center gap-2 truncate">
-                                <CompanyLogo name={company.name} showTooltip problemCount={company.problemCount} className="size-5 text-[10px] rounded-md" />
+                                <CompanyLogo name={company.name} className="size-5 text-[10px] rounded-md" />
                                 <span className="truncate font-sans font-medium">{company.name}</span>
                               </div>
                               <span
@@ -244,9 +231,9 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
         })}
 
         {/* All Other Companies */}
-        {filteredData.otherItems.length > 0 && (
+        {categorizedCompanies.otherItems.length > 0 && (
           <Collapsible
-            open={Boolean(search) || (openCategories["__other"] ?? false)}
+            open={openCategories["__other"] ?? false}
             onOpenChange={() => toggleCategory("__other")}
             className="group/collapsible"
           >
@@ -255,7 +242,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                 <CollapsibleTrigger className="flex w-full items-center justify-between px-2.5 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-lg hover:bg-sidebar-accent/50">
                   <span className="flex items-center gap-2">
                     <Building2 className="size-3.5 text-primary" />
-                    <span className="font-sans font-semibold">All Other Companies ({filteredData.otherItems.length})</span>
+                    <span className="font-sans font-semibold">All Other Companies ({categorizedCompanies.otherItems.length})</span>
                   </span>
                   <ChevronRight className="size-3.5 transition-transform duration-300 ease-in-out group-data-[state=open]/collapsible:rotate-90" />
                 </CollapsibleTrigger>
@@ -264,7 +251,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
               <CollapsibleContent className="transition-all duration-300 ease-in-out overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                 <SidebarGroupContent className="pt-1 pl-1 max-h-72 overflow-y-auto pr-1">
                   <SidebarMenu>
-                    {filteredData.otherItems.map((company) => {
+                    {categorizedCompanies.otherItems.map((company) => {
                       const isActive = selectedCompanySlug === company.slug;
                       return (
                         <SidebarMenuItem key={company.id}>
@@ -278,7 +265,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                             }`}
                           >
                             <div className="flex items-center gap-2 truncate">
-                              <CompanyLogo name={company.name} showTooltip problemCount={company.problemCount} className="size-5 text-[10px] rounded-md" />
+                              <CompanyLogo name={company.name} className="size-5 text-[10px] rounded-md" />
                               <span className="truncate font-sans font-medium">{company.name}</span>
                             </div>
                             <span

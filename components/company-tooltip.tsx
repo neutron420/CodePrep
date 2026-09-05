@@ -30,11 +30,12 @@ export function CompanyTooltip({
     <TooltipProvider delay={150}>
       <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger
-          onClick={(e) => {
+          render={<span />}
+          onClick={() => {
             // Prevent click bubbling if needed, or toggle tooltip on touch screens
             setOpen((prev) => !prev);
           }}
-          className="outline-none cursor-pointer focus-visible:ring-1 focus-visible:ring-ring rounded-md"
+          className="inline-flex outline-none cursor-pointer focus-visible:ring-1 focus-visible:ring-ring rounded-md"
         >
           {children}
         </TooltipTrigger>
