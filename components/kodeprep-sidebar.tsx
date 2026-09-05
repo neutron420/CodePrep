@@ -295,19 +295,19 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
         )}
       </SidebarContent>
 
-      {/* User Profile Footer Section matching screenshots */}
-      <div className="p-2 border-t border-sidebar-border bg-sidebar shrink-0 relative">
+      {/* User Profile Footer Section */}
+      <div className="p-2 border-t border-border bg-sidebar shrink-0 relative">
         {user ? (
           <div className="relative">
-            {/* Account Popover matching user's screenshot */}
+            {/* Account Popover */}
             {isAccountOpen && (
-              <div className="absolute bottom-full left-0 right-0 mb-2 rounded-2xl border border-zinc-800 bg-zinc-950 p-3.5 shadow-2xl z-50 animate-in fade-in-50 zoom-in-95 duration-150">
-                <div className="flex items-center justify-between pb-3 border-b border-zinc-800/80">
-                  <span className="font-bold text-sm text-white">Account</span>
+              <div className="absolute bottom-full left-0 right-0 mb-2 rounded-xl border border-border bg-popover text-popover-foreground p-3.5 shadow-xl z-50 animate-in fade-in-50 zoom-in-95 duration-150">
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <span className="font-bold text-sm text-foreground">Account</span>
                   <button
                     type="button"
                     onClick={() => setIsAccountOpen(false)}
-                    className="text-zinc-400 hover:text-white cursor-pointer p-1 rounded-md hover:bg-zinc-800 transition-colors"
+                    className="text-muted-foreground hover:text-foreground cursor-pointer p-1 rounded-md hover:bg-accent transition-colors"
                   >
                     <X className="size-4" />
                   </button>
@@ -321,7 +321,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                       await signOut();
                       router.push("/login");
                     }}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-[0.98]"
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-[0.98]"
                   >
                     <LogOut className="size-4 stroke-[2.2]" />
                     <span>Sign Out</span>
@@ -330,17 +330,18 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
               </div>
             )}
 
-            {/* Profile Card Button matching Screenshot */}
+            {/* Profile Card Button */}
             <button
               type="button"
               onClick={() => setIsAccountOpen(!isAccountOpen)}
-              className="w-full flex items-center gap-2.5 p-2 rounded-xl bg-zinc-900/60 hover:bg-zinc-850 dark:bg-zinc-900/80 dark:hover:bg-zinc-800/90 border border-zinc-800/80 transition-all cursor-pointer text-left group"
+              className="w-full flex items-center gap-2.5 p-2 rounded-xl bg-accent/50 hover:bg-accent border border-border transition-all cursor-pointer text-left group"
             >
               {user.photoURL ? (
                 <img
                   src={user.photoURL}
                   alt={user.displayName || "User"}
-                  className="size-9 rounded-lg object-cover shrink-0 border border-zinc-700/80 shadow-xs"
+                  className="size-9 rounded-lg object-cover shrink-0 border border-border shadow-xs"
+                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <div className="size-9 rounded-lg bg-amber-500/15 text-amber-500 border border-amber-500/30 flex items-center justify-center font-bold text-sm shrink-0">
@@ -348,7 +349,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                 </div>
               )}
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-bold text-sidebar-foreground truncate leading-tight">
+                <p className="text-xs font-bold text-foreground truncate leading-tight">
                   {user.displayName || user.email?.split("@")[0] || user.phoneNumber || "User"}
                 </p>
                 <p className="text-[11px] text-muted-foreground truncate font-mono mt-0.5 leading-tight">

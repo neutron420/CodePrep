@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/context/auth-context";
-import { LogOut, Phone, Star } from "lucide-react";
+import { LogOut, Phone } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { FlowButton } from "@/components/ui/flow-button";
 
 export function UserNav() {
@@ -59,11 +58,10 @@ export function UserNav() {
         title={displayName}
       >
         {user.photoURL ? (
-          <Image
+          <img
             src={user.photoURL}
             alt={displayName}
-            width={30}
-            height={30}
+            referrerPolicy="no-referrer"
             className="size-7 sm:size-8 rounded-full object-cover"
           />
         ) : (
@@ -92,13 +90,6 @@ export function UserNav() {
             )}
           </div>
 
-          {/* Quick Menu Items */}
-          <div className="py-1">
-            <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground">
-              <Star className="size-3.5 text-amber-500 fill-amber-400" />
-              <span>Targets Synced to Cloud</span>
-            </div>
-          </div>
 
           {/* Sign Out Button */}
           <div className="pt-1 border-t border-border/60">
