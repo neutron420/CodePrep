@@ -20,7 +20,8 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  problems CompanyProblem[]
+  problems    CompanyProblem[]
+  userTargets UserTargetCompany[]
 }
 
 model Problem {
@@ -33,8 +34,9 @@ model Problem {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  companies CompanyProblem[]
-  topics    ProblemTopic[]
+  companies  CompanyProblem[]
+  topics     ProblemTopic[]
+  userSolved UserSolvedProblem[]
 
   @@index([difficulty])
 }
@@ -72,3 +74,43 @@ model ProblemTopic {
   @@unique([problemId, topicId])
   @@index([topicId])
 }
+
+model User {
+  id          String   @id // Firebase UID
+  email       String?  @unique
+  phoneNumber String?  @unique
+  displayName String?
+  photoUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  targets UserTargetCompany[]
+  solved  UserSolvedProblem[]
+}
+
+model UserTargetCompany {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  companyId Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId])
+  @@index([userId])
+}
+
+model UserSolvedProblem {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  problemId Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId])
+  @@index([userId])
+}
+

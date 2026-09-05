@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { KodePrepLogo } from "@/components/kodeprep-logo";
+import { UserNav } from "@/components/user-nav";
+import { useAuth } from "@/lib/context/auth-context";
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -16,8 +18,16 @@ const menuItems = [
 ];
 
 export const HeroHeader = () => {
+  const { user } = useAuth();
   const [menuState, setMenuState] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
+
+  const getTargetHref = (href: string) => {
+    if (href === "/dashboard") {
+      return user ? "/dashboard" : "/login";
+    }
+    return href;
+  };
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -59,7 +69,12 @@ export const HeroHeader = () => {
                 <ul className="flex gap-1">
                   {menuItems.map((item, index) => (
                     <li key={index}>
-                      <Button variant="ghost" size="sm" render={<Link href={item.href} />} nativeButton={false}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        render={<Link href={getTargetHref(item.href)} />}
+                        nativeButton={false}
+                      >
                         <span>{item.name}</span>
                       </Button>
                     </li>
@@ -74,7 +89,7 @@ export const HeroHeader = () => {
                   {menuItems.map((item, index) => (
                     <li key={index}>
                       <Link
-                        href={item.href}
+                        href={getTargetHref(item.href)}
                         onClick={() => setMenuState(false)}
                         className="text-muted-foreground hover:text-accent-foreground block duration-150"
                       >
@@ -84,10 +99,8 @@ export const HeroHeader = () => {
                   ))}
                 </ul>
               </div>
-              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                <Button size="sm" onClick={() => setMenuState(false)} render={<Link href="/dashboard" />} nativeButton={false}>
-                  <span>Start Practicing</span>
-                </Button>
+              <div className="flex w-full flex-col space-y-3 sm:flex-row sm:items-center sm:gap-3 sm:space-y-0 md:w-fit">
+                <UserNav />
               </div>
             </div>
           </div>

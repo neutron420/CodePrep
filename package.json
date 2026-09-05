@@ -27,6 +27,7 @@
     "cn": "^0.2.5",
     "csv-parse": "^7.0.2",
     "dotenv": "^17.4.2",
+    "firebase": "^12.18.0",
     "lucide-react": "^1.39.0",
     "motion": "^13.1.1",
     "mx-icons": "^1.1.1",

@@ -20,6 +20,8 @@ export const metadata = {
 
 import { NavbarSearch } from "@/components/navbar-search";
 import { TargetCompaniesBar } from "@/components/target-companies-bar";
+import { UserNav } from "@/components/user-nav";
+import { AuthGuard } from "@/components/auth-guard";
 
 interface PageProps {
   searchParams: Promise<{
@@ -121,13 +123,14 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   }));
 
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "18rem",
-        } as React.CSSProperties
-      }
-    >
+    <AuthGuard>
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "18rem",
+          } as React.CSSProperties
+        }
+      >
       {/* Shadcn Custom Sidebar with Categories & Search */}
       <KodePrepSidebar companies={sidebarCompanies} selectedCompanySlug={activeCompany.slug} />
 
@@ -161,6 +164,9 @@ export default async function DashboardPage({ searchParams }: PageProps) {
               currentCompanySlug={activeCompany.slug}
             />
 
+            {/* Authentication & User Profile */}
+            <UserNav />
+
             <Link href="/">
               <Button variant="outline" size="sm" className="gap-1.5 font-medium cursor-pointer shadow-2xs hover:bg-muted text-xs h-8 px-2 sm:px-3">
                 <ArrowLeft className="size-3.5" />
@@ -186,5 +192,6 @@ export default async function DashboardPage({ searchParams }: PageProps) {
         </div>
       </SidebarInset>
     </SidebarProvider>
+    </AuthGuard>
   );
 }

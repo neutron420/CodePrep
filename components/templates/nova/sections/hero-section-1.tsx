@@ -1,8 +1,10 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/context/auth-context";
+import { FlowButton } from "@/components/ui/flow-button";
 import { Card } from "@/components/ui/card";
 import { HeroHeader } from "./header";
-import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { LeetCode } from "../svgs/leetcode";
 import { Codeforces } from "../svgs/codeforces";
@@ -14,6 +16,17 @@ import { GeeksForGeeks } from "../svgs/geeksforgeeks";
 import { TopCoder } from "../svgs/topcoder";
 
 export default function HeroSection() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleStartPracticing = () => {
+    if (user) {
+      router.push("/dashboard");
+    } else {
+      router.push("/login");
+    }
+  };
+
   return (
     <>
       <HeroHeader />
@@ -41,10 +54,14 @@ export default function HeroSection() {
                   Tick off what you solve.
                 </p>
 
-                <Button className="mt-6 pr-1.5 cursor-pointer" render={<Link href="/dashboard" />} nativeButton={false}>
-                  <span className="text-nowrap">Start Practicing</span>
-                  <ChevronRight className="opacity-50" />
-                </Button>
+                <div className="mt-7 flex justify-center">
+                  <FlowButton
+                    text="Start Practicing"
+                    onClick={handleStartPracticing}
+                    variant="black"
+                    className="h-12 px-9 text-sm font-semibold"
+                  />
+                </div>
               </div>
               <div className="mx-auto mt-24 max-w-xl">
                 <div className="grid scale-95 grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 md:gap-12">

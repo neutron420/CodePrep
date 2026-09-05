@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { FlowButton } from "@/components/ui/flow-button";
 
 export default function CallToAction() {
   return (
@@ -15,10 +14,13 @@ export default function CallToAction() {
             company and start solving.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button className="pr-1.5 cursor-pointer" render={<Link href="/dashboard" />} nativeButton={false}>
-              <span>Browse Companies</span>
-              <ChevronRight className="opacity-50" />
-            </Button>
+            <Link href="/dashboard">
+              <FlowButton
+                text="Browse Companies"
+                variant="black"
+                className="h-11 px-8 text-sm"
+              />
+            </Link>
           </div>
         </div>
       </div>

@@ -42,7 +42,11 @@ import {
   Compass,
   Radio,
   Zap,
+  LogOut,
+  LogIn,
 } from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/lib/context/auth-context";
 import { COMPANY_CATEGORIES, CompanyCategoryDef } from "@/lib/company-categories";
 import { CompanyLogo } from "@/components/company-logo";
 import { KodePrepLogo } from "@/components/kodeprep-logo";
@@ -119,6 +123,8 @@ interface KodePrepSidebarProps {
 
 export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSidebarProps) {
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const { user, signOut } = useAuth();
   const router = useRouter();
 
   const toggleCategory = (id: string) => {
@@ -288,6 +294,79 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
           </Collapsible>
         )}
       </SidebarContent>
+
+      {/* User Profile Footer Section matching screenshots */}
+      <div className="p-2 border-t border-sidebar-border bg-sidebar shrink-0 relative">
+        {user ? (
+          <div className="relative">
+            {/* Account Popover matching user's screenshot */}
+            {isAccountOpen && (
+              <div className="absolute bottom-full left-0 right-0 mb-2 rounded-2xl border border-zinc-800 bg-zinc-950 p-3.5 shadow-2xl z-50 animate-in fade-in-50 zoom-in-95 duration-150">
+                <div className="flex items-center justify-between pb-3 border-b border-zinc-800/80">
+                  <span className="font-bold text-sm text-white">Account</span>
+                  <button
+                    type="button"
+                    onClick={() => setIsAccountOpen(false)}
+                    className="text-zinc-400 hover:text-white cursor-pointer p-1 rounded-md hover:bg-zinc-800 transition-colors"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
+
+                <div className="pt-3">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setIsAccountOpen(false);
+                      await signOut();
+                      router.push("/login");
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-[0.98]"
+                  >
+                    <LogOut className="size-4 stroke-[2.2]" />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Profile Card Button matching Screenshot */}
+            <button
+              type="button"
+              onClick={() => setIsAccountOpen(!isAccountOpen)}
+              className="w-full flex items-center gap-2.5 p-2 rounded-xl bg-zinc-900/60 hover:bg-zinc-850 dark:bg-zinc-900/80 dark:hover:bg-zinc-800/90 border border-zinc-800/80 transition-all cursor-pointer text-left group"
+            >
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt={user.displayName || "User"}
+                  className="size-9 rounded-lg object-cover shrink-0 border border-zinc-700/80 shadow-xs"
+                />
+              ) : (
+                <div className="size-9 rounded-lg bg-amber-500/15 text-amber-500 border border-amber-500/30 flex items-center justify-center font-bold text-sm shrink-0">
+                  {(user.displayName || user.email || "U").charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold text-sidebar-foreground truncate leading-tight">
+                  {user.displayName || user.email?.split("@")[0] || user.phoneNumber || "User"}
+                </p>
+                <p className="text-[11px] text-muted-foreground truncate font-mono mt-0.5 leading-tight">
+                  {user.email || user.phoneNumber || "Logged in"}
+                </p>
+              </div>
+            </button>
+          </div>
+        ) : (
+          <Link
+            href="/login"
+            className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold text-xs transition-all shadow-sm cursor-pointer"
+          >
+            <LogIn className="size-4" />
+            <span>Login to CodeCraft</span>
+          </Link>
+        )}
+      </div>
     </Sidebar>
   );
 }
