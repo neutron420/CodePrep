@@ -19,6 +19,7 @@ export const metadata = {
 };
 
 import { NavbarSearch } from "@/components/navbar-search";
+import { TargetCompaniesBar } from "@/components/target-companies-bar";
 
 interface PageProps {
   searchParams: Promise<{
@@ -145,7 +146,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:inline-block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="font-semibold text-primary max-w-[100px] xs:max-w-[140px] sm:max-w-xs truncate text-xs sm:text-sm">
+                  <BreadcrumbPage className="font-semibold text-primary max-w-[80px] xs:max-w-[120px] sm:max-w-xs truncate text-xs sm:text-sm">
                     {activeCompany.name}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
@@ -153,7 +154,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             </Breadcrumb>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 ml-auto shrink-0">
             {/* Quick Search across all 694 companies in Navbar */}
             <NavbarSearch
               companies={sidebarCompanies}
@@ -161,16 +162,22 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             />
 
             <Link href="/">
-              <Button variant="outline" size="sm" className="gap-1.5 font-medium cursor-pointer shadow-2xs hover:bg-muted text-xs h-8 px-2.5 sm:px-3">
+              <Button variant="outline" size="sm" className="gap-1.5 font-medium cursor-pointer shadow-2xs hover:bg-muted text-xs h-8 px-2 sm:px-3">
                 <ArrowLeft className="size-3.5" />
-                <span className="hidden xs:inline sm:inline">Back</span>
+                <span className="hidden xs:inline">Back</span>
               </Button>
             </Link>
           </div>
         </header>
 
-        {/* Problem Explorer Box Format Content - Expands full width */}
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 w-full max-w-full transition-all duration-300">
+        {/* Problem Explorer Box Format Content - Expands full width with optimized mobile padding */}
+        <div className="flex-1 p-2.5 sm:p-5 lg:p-8 w-full max-w-full transition-all duration-300 space-y-3.5 sm:space-y-4">
+          {/* Target Companies Quick-Switch Ribbon */}
+          <TargetCompaniesBar
+            companies={sidebarCompanies}
+            activeCompanySlug={activeCompany.slug}
+          />
+
           <CompanyProblemGrid
             problems={problems}
             companyName={activeCompany.name}

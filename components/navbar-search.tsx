@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X, Building2, CornerDownLeft } from "lucide-react";
+import { Search, X, Building2, CornerDownLeft, Star } from "lucide-react";
 import { CompanyLogo } from "@/components/company-logo";
+import { useTargetCompanies } from "@/lib/hooks/use-target-companies";
 
 export interface NavbarCompanyItem {
   id: number;
@@ -24,6 +25,7 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { targets } = useTargetCompanies();
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -36,7 +38,7 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Keyboard shortcut Ctrl/Cmd+K to focus search
+  // Keyboard shortcut Ctrl/Cmd+K
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -52,11 +54,24 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Filter companies by query
+  // Filtered companies
   const filtered = useMemo(() => {
     if (!query.trim()) {
-      return companies.slice(0, 8);
+      const companyMap = new Map<string, NavbarCompanyItem>();
+      companies.forEach((c) => companyMap.set(c.slug.toLowerCase(), c));
+
+      // Pinned targets first, then top companies
+      const pinned = targets
+        .map((slug) => companyMap.get(slug.toLowerCase()))
+        .filter((c): c is NavbarCompanyItem => Boolean(c));
+
+      const remaining = companies
+        .filter((c) => !targets.includes(c.slug.toLowerCase()))
+        .slice(0, 10 - pinned.length);
+
+      return [...pinned, ...remaining];
     }
+
     const q = query.toLowerCase().trim();
     return companies
       .filter(
@@ -64,11 +79,12 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
           c.name.toLowerCase().includes(q) || c.slug.toLowerCase().includes(q)
       )
       .slice(0, 10);
-  }, [companies, query]);
+  }, [companies, query, targets]);
 
   const handleSelect = (slug: string) => {
     setIsOpen(false);
     setQuery("");
+    inputRef.current?.blur();
     router.push(`/dashboard?company=${slug}`);
   };
 
@@ -95,8 +111,11 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-[150px] xs:max-w-[200px] sm:max-w-[260px] md:max-w-[320px]">
-      {/* Search Input */}
+    <div
+      ref={containerRef}
+      className="relative w-full max-w-[150px] xs:max-w-[190px] sm:max-w-[240px] md:max-w-[280px]"
+    >
+      {/* Search Input - Clean and natural on mobile and desktop */}
       <div className="relative flex items-center">
         <Search className="absolute left-2.5 size-3.5 text-muted-foreground pointer-events-none" />
         <input
@@ -110,12 +129,13 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
             setSelectedIndex(0);
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Search companies..."
-          className="w-full pl-8 pr-7 py-1.5 rounded-lg border bg-muted/40 hover:bg-muted/70 focus:bg-background text-xs sm:text-xs transition-all focus:outline-none focus:ring-2 focus:ring-primary/40 placeholder:text-muted-foreground"
+          placeholder="Search..."
+          className="w-full pl-8 pr-7 py-1.5 rounded-lg border bg-muted/40 hover:bg-muted/70 focus:bg-background text-xs transition-all focus:outline-none focus:ring-2 focus:ring-primary/40 placeholder:text-muted-foreground"
         />
 
         {query ? (
           <button
+            type="button"
             onClick={() => {
               setQuery("");
               inputRef.current?.focus();
@@ -131,12 +151,12 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
         )}
       </div>
 
-      {/* Floating Auto-complete Dropdown */}
+      {/* Dropdown - Right aligned so it stays 100% inside mobile and desktop viewports */}
       {isOpen && (
-        <div className="absolute left-0 top-full mt-1.5 w-72 sm:w-80 rounded-xl border bg-popover text-popover-foreground shadow-lg z-50 overflow-hidden animate-in fade-in-50 zoom-in-95 duration-150">
+        <div className="absolute right-0 top-full mt-1.5 w-[min(290px,calc(100vw-24px))] sm:w-80 rounded-xl border bg-popover text-popover-foreground shadow-xl z-50 overflow-hidden animate-in fade-in-50 zoom-in-95 duration-150">
           <div className="p-1.5 max-h-72 overflow-y-auto">
             <div className="px-2 py-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-              {query ? `Matching Companies (${filtered.length})` : "Top Companies"}
+              {query ? `Matching (${filtered.length})` : "Target & Top Companies"}
             </div>
 
             {filtered.length === 0 ? (
@@ -149,6 +169,7 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
                 {filtered.map((c, idx) => {
                   const isSelected = idx === selectedIndex;
                   const isCurrent = c.slug === currentCompanySlug;
+                  const isPinned = targets.includes(c.slug.toLowerCase());
 
                   return (
                     <button
@@ -165,6 +186,9 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
                       <div className="flex items-center gap-2 min-w-0">
                         <CompanyLogo name={c.name} className="size-5 rounded-md text-[10px] shrink-0" />
                         <span className="truncate font-medium">{c.name}</span>
+                        {isPinned && (
+                          <Star className="size-3 text-amber-500 fill-amber-400 shrink-0" />
+                        )}
                       </div>
 
                       <div className="flex items-center gap-1.5 shrink-0">

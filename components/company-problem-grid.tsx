@@ -29,8 +29,10 @@ import {
   Radio,
   Zap,
   Building2,
+  Star,
 } from "lucide-react";
 import { useSolvedProblems } from "@/lib/hooks/use-solved-problems";
+import { useTargetCompanies } from "@/lib/hooks/use-target-companies";
 import { Card } from "@/components/ui/card";
 import { ProblemItem } from "@/types/problem";
 import { CompanyLogo } from "@/components/company-logo";
@@ -139,6 +141,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
   const pageSize = 12;
 
   const { isSolved } = useSolvedProblems();
+  const { isTarget, toggleTarget } = useTargetCompanies();
 
   // Company metadata & intelligence
   const slug = useMemo(() => {
@@ -201,124 +204,132 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header Banner - Rich Company Intel & Details */}
-      <div className="p-4 sm:p-6 md:p-7 rounded-2xl bg-card border shadow-xs relative overflow-hidden">
+      {/* Header Banner - Rich Company Intel & Details (Optimized for Mobile & Desktop) */}
+      <div className="p-3.5 sm:p-6 md:p-7 rounded-2xl bg-card border shadow-xs relative overflow-hidden">
         {/* Ambient atmospheric glow */}
         <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 size-64 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start relative">
-          {/* Left Column (Logo, Title, Description, Stats) */}
-          <div className="lg:col-span-7 flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
-            {/* Company Logo - elevated, clean */}
-            <div className="shrink-0 p-2 rounded-2xl bg-white dark:bg-card/90 border border-border/80 shadow-xs flex items-center justify-center self-start">
+        {/* Main Header Row: Identity (Left) + Actions (Right) */}
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3.5 sm:gap-6 relative">
+          {/* Left Identity: Logo + Title + Badges + Description + Metadata */}
+          <div className="flex items-start gap-3 sm:gap-4.5 min-w-0 flex-1">
+            {/* Company Logo - Cleanly sized */}
+            <div className="shrink-0 p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-white dark:bg-card/90 border border-border/80 shadow-xs flex items-center justify-center">
               <CompanyLogo
                 name={companyName}
                 showTooltip
                 problemCount={problems.length}
-                className="size-16 sm:size-20 md:size-22 text-2xl sm:text-3xl rounded-xl cursor-pointer transition-transform hover:scale-105"
+                className="size-11 sm:size-16 md:size-20 text-base sm:text-2xl rounded-lg sm:rounded-xl cursor-pointer transition-transform hover:scale-105"
               />
             </div>
 
-            <div className="min-w-0 flex-1 space-y-2">
-              <div>
+            <div className="min-w-0 flex-1 space-y-1 sm:space-y-1.5">
+              {/* Company Name & Category Pill */}
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <CompanyTooltip name={companyName} problemCount={problems.length} side="bottom" align="start">
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-snug break-words hover:text-primary transition-colors cursor-pointer">
-                    {companyName}{" "}
-                    <span className="font-semibold text-muted-foreground text-base sm:text-xl md:text-2xl inline">
-                      Interview Problems
-                    </span>
+                  <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight hover:text-primary transition-colors cursor-pointer">
+                    {companyName}
                   </h1>
                 </CompanyTooltip>
 
-                {/* Company 1-2 sentence description */}
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
-                  {details.description}
-                </p>
+                {category && (
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-muted/80 text-foreground text-[10px] sm:text-xs font-semibold border border-border/70 shadow-2xs">
+                    <CategoryIcon name={category.iconName} />
+                    <span className="truncate max-w-[150px] sm:max-w-[200px]">{category.name}</span>
+                  </span>
+                )}
               </div>
 
-              {/* Questions count & Difficulty Stats Badges */}
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted text-foreground text-xs font-semibold">
-                  <LeetCode className="size-3.5 shrink-0 text-amber-500" />
-                  <span>{problems.length.toLocaleString()} questions tagged</span>
+              {/* Description - 2 lines on mobile, full on desktop */}
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-2 sm:line-clamp-none">
+                {details.description}
+              </p>
+
+              {/* Location, Founded & Website link in compact metadata row */}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-0.5 text-[11px] sm:text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1">
+                  <MapPin className="size-3 text-muted-foreground/70 shrink-0" />
+                  <span>{details.hq}</span>
                 </span>
-                <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold font-mono">
-                  {easyCount} Easy
+                <span className="inline-flex items-center gap-1">
+                  <Calendar className="size-3 text-muted-foreground/70 shrink-0" />
+                  <span>
+                    {details.founded && (details.founded.startsWith("19") || details.founded.startsWith("20"))
+                      ? `Est. ${details.founded}`
+                      : details.founded}
+                  </span>
                 </span>
-                <span className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold font-mono">
-                  {mediumCount} Medium
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-bold font-mono">
-                  {hardCount} Hard
-                </span>
+                {domain && (
+                  <a
+                    href={`https://${domain}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-primary hover:underline font-mono text-[11px] transition-colors group"
+                  >
+                    <Globe className="size-3 shrink-0 text-muted-foreground group-hover:text-primary" />
+                    <span>{domain}</span>
+                    <ExternalLink className="size-2.5 shrink-0" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Right Column (Company Intel Card: Domain, Website, HQ/Founded, Top Tested Topics) */}
-          <div className="lg:col-span-5 flex flex-col justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-muted/40 border border-border/70 backdrop-blur-xs">
-            {/* Top row: Industry domain badge with vibrant icon & Official website link */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              {category && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-background/90 text-foreground text-xs font-semibold border border-border/80 shadow-2xs">
-                  <CategoryIcon name={category.iconName} />
-                  <span className="truncate max-w-[200px]">{category.name}</span>
-                </span>
-              )}
+          {/* Right Action: Pin Target Button */}
+          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+            <button
+              type="button"
+              onClick={() => toggleTarget(slug)}
+              className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all shadow-2xs cursor-pointer ${
+                isTarget(slug)
+                  ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/25"
+                  : "bg-background hover:bg-muted text-muted-foreground hover:text-foreground border-border"
+              }`}
+              title={isTarget(slug) ? "Pinned in My Target Companies" : "Pin to My Target Companies"}
+            >
+              <Star className={`size-3.5 shrink-0 ${isTarget(slug) ? "fill-amber-400 text-amber-500" : ""}`} />
+              <span>{isTarget(slug) ? "Target Company" : "Pin as Target"}</span>
+            </button>
+          </div>
+        </div>
 
-              {domain && (
-                <a
-                  href={`https://${domain}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-background hover:bg-muted text-muted-foreground hover:text-foreground text-xs font-medium border border-border transition-colors shadow-2xs group ml-auto"
+        {/* Bottom Stats & DSA Focus Topics Bar - Full width responsive grid/flex */}
+        <div className="mt-3.5 pt-3 border-t border-border/60 flex flex-col md:flex-row md:items-center justify-between gap-3 relative">
+          {/* Left: Questions Count & Difficulty Badges */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted text-foreground text-[11px] sm:text-xs font-semibold">
+              <LeetCode className="size-3.5 shrink-0 text-amber-500" />
+              <span>{problems.length.toLocaleString()} Questions</span>
+            </span>
+            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] sm:text-xs font-bold font-mono">
+              {easyCount} Easy
+            </span>
+            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] sm:text-xs font-bold font-mono">
+              {mediumCount} Medium
+            </span>
+            <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[11px] sm:text-xs font-bold font-mono">
+              {hardCount} Hard
+            </span>
+          </div>
+
+          {/* Right: Top DSA Focus Topics */}
+          {topTopics.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1 mr-0.5">
+                <Sparkles className="size-3 text-amber-500 shrink-0" />
+                <span>Top Topics:</span>
+              </span>
+              {topTopics.slice(0, 5).map(({ topic, count }) => (
+                <span
+                  key={topic}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-medium bg-muted/60 border border-border/80 text-foreground shadow-2xs"
                 >
-                  <Globe className="size-3 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
-                  <span className="truncate max-w-[140px] font-mono text-[11px]">{domain}</span>
-                  <ExternalLink className="size-2.5 text-muted-foreground group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
-                </a>
-              )}
-            </div>
-
-            {/* HQ & Founded / Stage - Full details for all companies */}
-            <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <MapPin className="size-3.5 text-muted-foreground/80 shrink-0" />
-                <span>{details.hq}</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Calendar className="size-3.5 text-muted-foreground/80 shrink-0" />
-                <span>
-                  {details.founded && (details.founded.startsWith("19") || details.founded.startsWith("20"))
-                    ? `Est. ${details.founded}`
-                    : details.founded}
+                  <span>{topic}</span>
+                  <span className="text-[9px] sm:text-[10px] text-muted-foreground font-mono">({count})</span>
                 </span>
-              </span>
+              ))}
             </div>
-
-            {/* Top tested DSA topics */}
-            {topTopics.length > 0 && (
-              <div className="pt-2 border-t border-border/50">
-                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
-                  <Sparkles className="size-3 text-amber-500 shrink-0" />
-                  <span>Top Focus Topics</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {topTopics.map(({ topic, count }) => (
-                    <span
-                      key={topic}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-background border border-border text-foreground shadow-2xs"
-                    >
-                      <span>{topic}</span>
-                      <span className="text-[10px] text-muted-foreground font-mono font-normal">
-                        ({count})
-                      </span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
