@@ -844,9 +844,9 @@ export function SubmitQuestionDialog({
             </div>
 
             {/* Quick Presets */}
-            <div className="grid grid-cols-4 gap-1">
+            <div className="grid grid-cols-4 gap-1.5">
               {[
-                { label: "Recent (<1m)", value: "THIRTY_DAYS" },
+                { label: "< 1 Month", value: "THIRTY_DAYS" },
                 { label: "3 Months", value: "THREE_MONTHS" },
                 { label: "6 Months", value: "SIX_MONTHS" },
                 { label: "6+ Months", value: "MORE_THAN_SIX_MONTHS" },
@@ -855,7 +855,7 @@ export function SubmitQuestionDialog({
                   key={p.value}
                   type="button"
                   onClick={() => setTimeframe(p.value)}
-                  className={`py-1 text-[10px] font-semibold rounded-md border transition-all cursor-pointer text-center truncate px-1 ${
+                  className={`py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-md border transition-all cursor-pointer text-center truncate px-1 ${
                     timeframe === p.value
                       ? "bg-primary text-primary-foreground border-primary shadow-2xs font-bold"
                       : "bg-background/80 hover:bg-muted text-muted-foreground border-border/80"
