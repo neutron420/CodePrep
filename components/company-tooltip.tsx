@@ -27,29 +27,28 @@ export function CompanyTooltip({
   const [open, setOpen] = useState(false);
 
   return (
-    <TooltipProvider delay={150}>
+    <TooltipProvider delay={100}>
       <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger
-          render={<span />}
-          onClick={() => {
-            // Prevent click bubbling if needed, or toggle tooltip on touch screens
-            setOpen((prev) => !prev);
-          }}
-          className="inline-flex outline-none cursor-pointer focus-visible:ring-1 focus-visible:ring-ring rounded-md"
+          render={<span className="inline-flex outline-none cursor-pointer" />}
         >
           {children}
         </TooltipTrigger>
         <TooltipContent
           side={side}
           align={align}
-          className="p-2.5 bg-popover/95 backdrop-blur-md text-popover-foreground border border-border/80 shadow-xl rounded-xl z-50 animate-in fade-in-0 zoom-in-95"
+          className="p-2.5 bg-white text-zinc-900 border border-zinc-200 shadow-xl rounded-xl z-50 animate-in fade-in-0 zoom-in-95"
         >
           <div className="flex items-center gap-2.5 min-w-[120px]">
-            <CompanyLogo name={name} className="size-7 text-xs rounded-md shadow-xs" />
-            <div className="flex flex-col text-left">
-              <span className="font-bold text-xs leading-tight text-foreground">{name}</span>
-              <span className="text-[10px] text-muted-foreground font-mono mt-0.5">
-                {problemCount !== undefined ? `${problemCount.toLocaleString()} questions` : "LeetCode Tagged"}
+            <CompanyLogo name={name} className="size-6.5 text-xs rounded-md shadow-2xs shrink-0" />
+            <div className="flex flex-col text-left min-w-0">
+              <span className="font-bold text-xs leading-tight text-zinc-900 truncate">
+                {name}
+              </span>
+              <span className="text-[10px] text-zinc-500 font-mono mt-0.5">
+                {problemCount !== undefined
+                  ? `${problemCount.toLocaleString()} questions`
+                  : "LeetCode Tagged"}
               </span>
             </div>
           </div>

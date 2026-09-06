@@ -49,6 +49,7 @@ import Link from "next/link";
 import { useAuth } from "@/lib/context/auth-context";
 import { COMPANY_CATEGORIES, CompanyCategoryDef } from "@/lib/company-categories";
 import { CompanyLogo } from "@/components/company-logo";
+import { CompanyTooltip } from "@/components/company-tooltip";
 import { KodePrepLogo } from "@/components/kodeprep-logo";
 
 function CategoryIcon({ name }: { name: CompanyCategoryDef["iconName"] | string }) {
@@ -202,29 +203,31 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                         const isActive = selectedCompanySlug === company.slug;
                         return (
                           <SidebarMenuItem key={company.id}>
-                            <SidebarMenuButton
-                              onClick={() => selectCompany(company.slug)}
-                              isActive={isActive}
-                              className={`w-full justify-between px-2 py-1.5 text-xs rounded-lg transition-all duration-200 cursor-pointer ${
-                                isActive
-                                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                                  : "hover:bg-sidebar-accent text-sidebar-foreground"
-                              }`}
-                            >
-                              <div className="flex items-center gap-2 truncate">
-                                <CompanyLogo name={company.name} className="size-5 text-[10px] rounded-md" />
-                                <span className="truncate font-sans font-medium">{company.name}</span>
-                              </div>
-                              <span
-                                className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-medium ${
+                            <CompanyTooltip name={company.name} problemCount={company.problemCount} side="right">
+                              <SidebarMenuButton
+                                onClick={() => selectCompany(company.slug)}
+                                isActive={isActive}
+                                className={`w-full justify-between px-2 py-1.5 text-xs rounded-lg transition-all duration-200 cursor-pointer ${
                                   isActive
-                                    ? "bg-primary-foreground/20 text-primary-foreground"
-                                    : "bg-sidebar-accent text-muted-foreground"
+                                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                                    : "hover:bg-sidebar-accent text-sidebar-foreground"
                                 }`}
                               >
-                                {company.problemCount}
-                              </span>
-                            </SidebarMenuButton>
+                                <div className="flex items-center gap-2 truncate">
+                                  <CompanyLogo name={company.name} className="size-5 text-[10px] rounded-md" />
+                                  <span className="truncate font-sans font-medium">{company.name}</span>
+                                </div>
+                                <span
+                                  className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-medium ${
+                                    isActive
+                                      ? "bg-primary-foreground/20 text-primary-foreground"
+                                      : "bg-sidebar-accent text-muted-foreground"
+                                  }`}
+                                >
+                                  {company.problemCount}
+                                </span>
+                              </SidebarMenuButton>
+                            </CompanyTooltip>
                           </SidebarMenuItem>
                         );
                       })}
@@ -261,29 +264,31 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                       const isActive = selectedCompanySlug === company.slug;
                       return (
                         <SidebarMenuItem key={company.id}>
-                          <SidebarMenuButton
-                            onClick={() => selectCompany(company.slug)}
-                            isActive={isActive}
-                            className={`w-full justify-between px-2 py-1.5 text-xs rounded-lg transition-all duration-200 cursor-pointer ${
-                              isActive
-                                ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                                : "hover:bg-sidebar-accent text-sidebar-foreground"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 truncate">
-                              <CompanyLogo name={company.name} className="size-5 text-[10px] rounded-md" />
-                              <span className="truncate font-sans font-medium">{company.name}</span>
-                            </div>
-                            <span
-                              className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-medium ${
+                          <CompanyTooltip name={company.name} problemCount={company.problemCount} side="right">
+                            <SidebarMenuButton
+                              onClick={() => selectCompany(company.slug)}
+                              isActive={isActive}
+                              className={`w-full justify-between px-2 py-1.5 text-xs rounded-lg transition-all duration-200 cursor-pointer ${
                                 isActive
-                                  ? "bg-primary-foreground/20 text-primary-foreground"
-                                  : "bg-sidebar-accent text-muted-foreground"
+                                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                                  : "hover:bg-sidebar-accent text-sidebar-foreground"
                               }`}
                             >
-                              {company.problemCount}
-                            </span>
-                          </SidebarMenuButton>
+                              <div className="flex items-center gap-2 truncate">
+                                <CompanyLogo name={company.name} className="size-5 text-[10px] rounded-md" />
+                                <span className="truncate font-sans font-medium">{company.name}</span>
+                              </div>
+                              <span
+                                className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-medium ${
+                                  isActive
+                                    ? "bg-primary-foreground/20 text-primary-foreground"
+                                    : "bg-sidebar-accent text-muted-foreground"
+                                }`}
+                              >
+                                {company.problemCount}
+                              </span>
+                            </SidebarMenuButton>
+                          </CompanyTooltip>
                         </SidebarMenuItem>
                       );
                     })}

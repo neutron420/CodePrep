@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Star, ChevronRight } from "lucide-react";
 import { CompanyLogo } from "@/components/company-logo";
+import { CompanyTooltip } from "@/components/company-tooltip";
 import { useTargetCompanies } from "@/lib/hooks/use-target-companies";
 
 export interface TargetBarCompany {
@@ -56,34 +57,39 @@ export function TargetCompaniesBar({
           const isActive = company.slug.toLowerCase() === activeCompanySlug.toLowerCase();
 
           return (
-            <button
+            <CompanyTooltip
               key={company.id}
-              type="button"
-              onClick={() => router.push(`/dashboard?company=${company.slug}`)}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer shrink-0 border ${
-                isActive
-                  ? "bg-primary text-primary-foreground font-semibold border-primary shadow-xs"
-                  : "bg-muted/40 hover:bg-muted text-foreground border-border/70 hover:border-border"
-              }`}
-              title={`Switch to ${company.name}`}
+              name={company.name}
+              problemCount={company.problemCount}
+              side="bottom"
             >
-              <CompanyLogo
-                name={company.name}
-                className="size-4 rounded text-[9px] shrink-0"
-              />
-              <span className="font-medium truncate max-w-[110px] sm:max-w-[140px]">
-                {company.name}
-              </span>
-              <span
-                className={`text-[10px] font-mono ${
+              <button
+                type="button"
+                onClick={() => router.push(`/dashboard?company=${company.slug}`)}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer shrink-0 border ${
                   isActive
-                    ? "text-primary-foreground/80"
-                    : "text-muted-foreground"
+                    ? "bg-primary text-primary-foreground font-semibold border-primary shadow-xs"
+                    : "bg-muted/40 hover:bg-muted text-foreground border-border/70 hover:border-border"
                 }`}
               >
-                ({company.problemCount})
-              </span>
-            </button>
+                <CompanyLogo
+                  name={company.name}
+                  className="size-4 rounded text-[9px] shrink-0"
+                />
+                <span className="font-medium truncate max-w-[110px] sm:max-w-[140px]">
+                  {company.name}
+                </span>
+                <span
+                  className={`text-[10px] font-mono ${
+                    isActive
+                      ? "text-primary-foreground/80"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  ({company.problemCount})
+                </span>
+              </button>
+            </CompanyTooltip>
           );
         })}
       </div>
