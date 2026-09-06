@@ -39,8 +39,10 @@ interface RawCompanyItem {
 }
 
 interface RawProblemEntry {
+  timeframe?: string | null;
   problem: {
     id: number;
+    leetcodeNumber?: number | null;
     title: string;
     slug: string;
     difficulty: "EASY" | "MEDIUM" | "HARD";
@@ -107,6 +109,9 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     topics: string[];
     platform: import("@/types/problem").CodingPlatformType;
     roundType: string;
+    interviewMonth?: string | null;
+    interviewYear?: number | null;
+    timeframe?: string | null;
     notes: string | null;
     upvotes: number;
     company?: { name: string; slug: string };
@@ -170,11 +175,13 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
   const standardProblems: ProblemItem[] = rawProblems.map((rp) => ({
     id: rp.problem.id,
+    leetcodeNumber: rp.problem.leetcodeNumber,
     title: rp.problem.title,
     slug: rp.problem.slug,
     difficulty: rp.problem.difficulty,
     leetcodeUrl: rp.problem.leetcodeUrl,
     topics: rp.problem.topics.map((t) => t.topic.name),
+    timeframe: rp.timeframe || "ALL",
     companiesAsking: rp.problem.companies ? rp.problem.companies.map((c) => ({
       name: c.company.name,
       slug: c.company.slug,
@@ -194,6 +201,10 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       ...otherCompanies.filter((c) => c.slug !== activeSlug),
     ];
 
+    const interviewDate = cp.interviewMonth && cp.interviewYear
+      ? `${cp.interviewMonth} ${cp.interviewYear}`
+      : cp.interviewMonth || (cp.interviewYear ? String(cp.interviewYear) : null);
+
     return {
       id: cp.id + 1_000_000, // Distinct key range to prevent collision with standard problem IDs
       title: cp.title,
@@ -205,6 +216,10 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       platform: cp.platform,
       isCommunity: true,
       roundType: cp.roundType,
+      timeframe: cp.timeframe || "ALL",
+      interviewMonth: cp.interviewMonth,
+      interviewYear: cp.interviewYear,
+      interviewDate,
       notes: cp.notes,
       upvotes: cp.upvotes,
       submittedBy: cp.user || null,

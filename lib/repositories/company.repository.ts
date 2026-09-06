@@ -88,9 +88,11 @@ export function findProblemsForCompany(companyId: number, params: CompanyProblem
       skip: (page - 1) * limit,
       take: limit,
       select: {
+        timeframe: true,
         problem: {
           select: {
             id: true,
+            leetcodeNumber: true,
             title: true,
             slug: true,
             difficulty: true,

@@ -32,6 +32,7 @@ import {
   Building2,
   Star,
   ThumbsUp,
+  Clock,
 } from "lucide-react";
 import { useSolvedProblems } from "@/lib/hooks/use-solved-problems";
 import { useTargetCompanies } from "@/lib/hooks/use-target-companies";
@@ -165,6 +166,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
   const [search, setSearch] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState<string>("ALL");
   const [sourceFilter, setSourceFilter] = useState<"ALL" | "CURATED" | "COMMUNITY">("ALL");
+  const [timeframeFilter, setTimeframeFilter] = useState<string>("ALL");
   const [viewMode, setViewMode] = useState<"GRID" | "LIST">("GRID");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [upvotesState, setUpvotesState] = useState<Record<number, number>>({});
@@ -262,6 +264,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       const matchesSearch =
         p.title.toLowerCase().includes(search.toLowerCase()) ||
         p.slug.toLowerCase().includes(search.toLowerCase()) ||
+        (p.leetcodeNumber != null && String(p.leetcodeNumber).includes(search.toLowerCase())) ||
         (p.topics && p.topics.some((t) => t.toLowerCase().includes(search.toLowerCase())));
       const matchesDifficulty =
         difficultyFilter === "ALL" || p.difficulty === difficultyFilter;
@@ -269,10 +272,16 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         sourceFilter === "ALL" ||
         (sourceFilter === "COMMUNITY" && p.isCommunity) ||
         (sourceFilter === "CURATED" && !p.isCommunity);
+      const matchesTimeframe =
+        timeframeFilter === "ALL" ||
+        (timeframeFilter === "THIRTY_DAYS" && p.timeframe === "THIRTY_DAYS") ||
+        (timeframeFilter === "THREE_MONTHS" && (p.timeframe === "THIRTY_DAYS" || p.timeframe === "THREE_MONTHS")) ||
+        (timeframeFilter === "SIX_MONTHS" && (p.timeframe === "THIRTY_DAYS" || p.timeframe === "THREE_MONTHS" || p.timeframe === "SIX_MONTHS")) ||
+        (timeframeFilter === "MORE_THAN_SIX_MONTHS" && (p.timeframe === "MORE_THAN_SIX_MONTHS" || p.timeframe === "ALL"));
 
-      return matchesSearch && matchesDifficulty && matchesSource;
+      return matchesSearch && matchesDifficulty && matchesSource && matchesTimeframe;
     });
-  }, [problems, search, difficultyFilter, sourceFilter]);
+  }, [problems, search, difficultyFilter, sourceFilter, timeframeFilter]);
 
   // Reset pagination when filters change
   const totalPages = Math.ceil(filteredProblems.length / pageSize) || 1;
@@ -288,6 +297,18 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
   const hardCount = problems.filter((p) => p.difficulty === "HARD").length;
   const communityCount = useMemo(() => problems.filter((p) => p.isCommunity).length, [problems]);
   const curatedCount = problems.length - communityCount;
+  const thirtyDaysCount = useMemo(
+    () => problems.filter((p) => p.timeframe === "THIRTY_DAYS").length,
+    [problems]
+  );
+  const threeMonthsCount = useMemo(
+    () => problems.filter((p) => p.timeframe === "THIRTY_DAYS" || p.timeframe === "THREE_MONTHS").length,
+    [problems]
+  );
+  const sixMonthsCount = useMemo(
+    () => problems.filter((p) => p.timeframe === "THIRTY_DAYS" || p.timeframe === "THREE_MONTHS" || p.timeframe === "SIX_MONTHS").length,
+    [problems]
+  );
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -446,7 +467,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         {/* Row 2: Source Tabs + Difficulty Selector + View Mode */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
           {/* Source Tabs */}
-          <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg border text-xs font-medium overflow-x-auto no-scrollbar shrink-0">
+          <div className="flex items-center gap-1.5 p-1 bg-secondary/50 rounded-lg border text-xs font-medium overflow-x-auto no-scrollbar shrink-0">
             <button
               onClick={() => {
                 setSourceFilter("ALL");
@@ -487,6 +508,39 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
               <ThumbsUp className="size-3" />
               <span>Community ({communityCount})</span>
             </button>
+          </div>
+
+          {/* Timeframe selector */}
+          <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg border text-xs font-medium overflow-x-auto no-scrollbar">
+            <span className="text-[10px] font-semibold text-muted-foreground uppercase px-1.5 flex items-center gap-1 shrink-0">
+              <Clock className="size-3 text-primary" />
+              <span>Time:</span>
+            </span>
+            {[
+              { id: "ALL", label: "All Time", count: problems.length },
+              { id: "THIRTY_DAYS", label: "30 Days", count: thirtyDaysCount },
+              { id: "THREE_MONTHS", label: "3 Months", count: threeMonthsCount },
+              { id: "SIX_MONTHS", label: "6 Months", count: sixMonthsCount },
+              { id: "MORE_THAN_SIX_MONTHS", label: "6+ Months", count: Math.max(0, problems.length - sixMonthsCount) },
+            ].map((tf) => (
+              <button
+                key={tf.id}
+                onClick={() => {
+                  setTimeframeFilter(tf.id);
+                  setCurrentPage(1);
+                }}
+                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer whitespace-nowrap text-xs flex items-center gap-1 shrink-0 ${
+                  timeframeFilter === tf.id
+                    ? "bg-card text-foreground font-bold shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <span>{tf.label}</span>
+                <span className={`text-[9px] px-1 py-0.2 rounded font-semibold ${timeframeFilter === tf.id ? "bg-primary/10 text-primary" : "opacity-60"}`}>
+                  {tf.count}
+                </span>
+              </button>
+            ))}
           </div>
 
           <div className="flex items-center justify-between sm:justify-end gap-2">
@@ -560,15 +614,19 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                 <div>
                   {/* Top Bar: Platform Logo + Round / ID + Difficulty */}
                   <div className="flex items-center justify-between gap-2 mb-2 sm:mb-3">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-4 shrink-0" />
                       <span className="text-[10px] font-mono font-medium text-muted-foreground">
                         {p.isCommunity ? (
                           <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary border border-primary/20">
                             Community
                           </span>
+                        ) : p.leetcodeNumber ? (
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-muted text-foreground border border-border/80">
+                            LC {p.leetcodeNumber}
+                          </span>
                         ) : (
-                          `#${p.slug}`
+                          <span className="text-muted-foreground">{p.slug}</span>
                         )}
                       </span>
                       {p.roundType && (
@@ -576,11 +634,33 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                           {p.roundType}
                         </span>
                       )}
+                      {/* Recency Badge */}
+                      {p.interviewDate ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
+                          <Calendar className="size-2.5" />
+                          <span>Asked {p.interviewDate}</span>
+                        </span>
+                      ) : p.timeframe === "THIRTY_DAYS" ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                          <Clock className="size-2.5" />
+                          <span>Past 30 Days</span>
+                        </span>
+                      ) : p.timeframe === "THREE_MONTHS" ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center gap-1">
+                          <Clock className="size-2.5" />
+                          <span>Past 3 Months</span>
+                        </span>
+                      ) : p.timeframe === "SIX_MONTHS" ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 flex items-center gap-1">
+                          <Clock className="size-2.5" />
+                          <span>Past 6 Months</span>
+                        </span>
+                      ) : null}
                     </div>
 
                     {/* Difficulty Badge */}
                     <span
-                      className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-md uppercase tracking-wider ${
+                      className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-md uppercase tracking-wider shrink-0 ${
                         p.difficulty === "EASY"
                           ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                           : p.difficulty === "MEDIUM"
@@ -592,13 +672,13 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                     </span>
                   </div>
 
-                  {/* Problem Title */}
+                  {/* Problem Title (Clean with LeetCode number if available) */}
                   <h3
                     className={`font-bold text-[13px] sm:text-sm leading-snug text-foreground mb-2 sm:mb-3 line-clamp-2 ${
                       solved ? "line-through text-muted-foreground" : ""
                     }`}
                   >
-                    {p.title}
+                    {p.leetcodeNumber ? `${p.leetcodeNumber}. ${p.title}` : p.title}
                   </h3>
 
                   {/* Optional Notes for Community Questions */}
@@ -608,7 +688,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                     </p>
                   )}
 
-                  {/* Topics Tags Pills */}
+                  {/* Topics Tags Pills (WITHOUT # symbol) */}
                   <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-3 sm:mb-4">
                     {p.topics.map((t: string, i: number) => (
                       <span
@@ -617,7 +697,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                           t
                         )}`}
                       >
-                        #{t}
+                        {t}
                       </span>
                     ))}
                   </div>
@@ -690,7 +770,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                           </button>
                         ) : (
                           <span className="text-[10px] sm:text-[11px] text-muted-foreground font-mono truncate max-w-[40%]">
-                            #{p.slug}
+                            {p.leetcodeNumber ? `LC ${p.leetcodeNumber}` : p.slug}
                           </span>
                         )}
 
@@ -741,7 +821,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                         <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-4 shrink-0 mt-0.5 sm:mt-0" />
                         <div className="min-w-0 flex flex-col gap-0.5">
                           <span className={`leading-snug ${solved ? "line-through text-muted-foreground" : ""}`}>
-                            {p.title}
+                            {p.leetcodeNumber ? `${p.leetcodeNumber}. ${p.title}` : p.title}
                           </span>
                           <div className="flex items-center gap-1.5 flex-wrap">
                             {p.roundType && (
@@ -749,6 +829,23 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                                 {p.roundType}
                               </span>
                             )}
+                            {p.interviewDate ? (
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 whitespace-nowrap">
+                                Asked {p.interviewDate}
+                              </span>
+                            ) : p.timeframe === "THIRTY_DAYS" ? (
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
+                                Past 30 Days
+                              </span>
+                            ) : p.timeframe === "THREE_MONTHS" ? (
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 whitespace-nowrap">
+                                Past 3 Months
+                              </span>
+                            ) : p.timeframe === "SIX_MONTHS" ? (
+                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 whitespace-nowrap">
+                                Past 6 Months
+                              </span>
+                            ) : null}
                             {p.isCommunity && (
                               <span className="text-[10px] text-muted-foreground/80 whitespace-nowrap">
                                 • {p.submittedBy?.displayName ? `by ${p.submittedBy.displayName}` : "Anonymous"}
@@ -786,7 +883,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                               t
                             )}`}
                           >
-                            #{t}
+                            {t}
                           </span>
                         ))}
                       </div>

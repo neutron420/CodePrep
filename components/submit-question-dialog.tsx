@@ -25,6 +25,7 @@ import {
   ChevronDown,
   Search,
   AlertCircle,
+  Calendar,
 } from "lucide-react";
 import { CodingPlatformType } from "@/types/problem";
 import { CodingPlatformIcon } from "@/components/coding-platform-icon";
@@ -98,6 +99,11 @@ const ROUND_OPTIONS = [
   "Technical Round 1",
   "Technical Round 2",
   "Managerial / HR",
+];
+
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
 ];
 
 // Security layer: Validate, sanitize, and auto-detect coding platform from URL
@@ -288,6 +294,11 @@ export function SubmitQuestionDialog({
 
   const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">("MEDIUM");
   const [roundType, setRoundType] = useState("Online Assessment (OA)");
+  const currentYear = new Date().getFullYear();
+  const currentMonthIndex = new Date().getMonth();
+  const [interviewMonth, setInterviewMonth] = useState<string>(MONTH_NAMES[currentMonthIndex]);
+  const [interviewYear, setInterviewYear] = useState<number>(currentYear);
+  const [timeframe, setTimeframe] = useState<string>("THIRTY_DAYS");
   const [selectedTopics, setSelectedTopics] = useState<string[]>(["Array"]);
   const [customTopicInput, setCustomTopicInput] = useState("");
   const [notes, setNotes] = useState("");
@@ -443,6 +454,9 @@ export function SubmitQuestionDialog({
             problemUrl: problemUrl.trim() || null,
             difficulty,
             roundType,
+            interviewMonth,
+            interviewYear,
+            timeframe,
             topics: selectedTopics,
             notes: notes.trim() || null,
             userId: isAnonymous ? null : user?.uid || null,
@@ -816,6 +830,72 @@ export function SubmitQuestionDialog({
                   </option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          {/* Row 4.5: When was this asked? (Interview Date & Recency) */}
+          <div className="space-y-2 p-2.5 rounded-lg sm:rounded-xl bg-muted/30 border border-border/70">
+            <div className="flex items-center justify-between">
+              <label className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5">
+                <Calendar className="size-3.5 text-primary" />
+                <span>When were you asked this?</span>
+              </label>
+              <span className="text-[10px] text-muted-foreground font-medium">Timeline & Recency</span>
+            </div>
+
+            {/* Quick Presets */}
+            <div className="grid grid-cols-4 gap-1">
+              {[
+                { label: "Recent (<1m)", value: "THIRTY_DAYS" },
+                { label: "3 Months", value: "THREE_MONTHS" },
+                { label: "6 Months", value: "SIX_MONTHS" },
+                { label: "6+ Months", value: "MORE_THAN_SIX_MONTHS" },
+              ].map((p) => (
+                <button
+                  key={p.value}
+                  type="button"
+                  onClick={() => setTimeframe(p.value)}
+                  className={`py-1 text-[10px] font-semibold rounded-md border transition-all cursor-pointer text-center truncate px-1 ${
+                    timeframe === p.value
+                      ? "bg-primary text-primary-foreground border-primary shadow-2xs font-bold"
+                      : "bg-background/80 hover:bg-muted text-muted-foreground border-border/80"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Month & Year Selectors */}
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <div>
+                <label className="text-[10px] text-muted-foreground font-medium mb-1 block">Interview Month</label>
+                <select
+                  value={interviewMonth}
+                  onChange={(e) => setInterviewMonth(e.target.value)}
+                  className="w-full h-8 px-2 text-[11px] rounded-md border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+                >
+                  {MONTH_NAMES.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-[10px] text-muted-foreground font-medium mb-1 block">Interview Year</label>
+                <select
+                  value={interviewYear}
+                  onChange={(e) => setInterviewYear(Number(e.target.value))}
+                  className="w-full h-8 px-2 text-[11px] rounded-md border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+                >
+                  {[currentYear, currentYear - 1, currentYear - 2, currentYear - 3].map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 

@@ -40,11 +40,12 @@ model Company {
 
 model Problem {
   id          Int        @id @default(autoincrement())
-  leetcodeId  String     @unique
-  title       String
-  slug        String     @unique
-  difficulty  Difficulty
-  leetcodeUrl String     @unique
+  leetcodeId     String     @unique
+  leetcodeNumber Int?
+  title          String
+  slug           String     @unique
+  difficulty     Difficulty
+  leetcodeUrl    String     @unique
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
@@ -59,6 +60,7 @@ model CompanyProblem {
   id        Int      @id @default(autoincrement())
   companyId Int
   problemId Int
+  timeframe String?  @default("ALL")
   createdAt DateTime @default(now())
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
@@ -137,8 +139,11 @@ model CommunityProblem {
   title      String
   problemUrl String?
   difficulty Difficulty     @default(MEDIUM)
-  roundType  String
-  topics     String[]
+  roundType      String
+  interviewMonth String?
+  interviewYear  Int?
+  timeframe      String?        @default("ALL")
+  topics         String[]
   notes      String?
   upvotes    Int            @default(1)
   createdAt  DateTime       @default(now())
