@@ -8,8 +8,6 @@ import { prisma } from "@/lib/prisma";
 import { withDbRetry } from "@/lib/db-retry";
 import { ProblemItem } from "@/types/problem";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +19,6 @@ export const metadata = {
 import { NavbarSearch } from "@/components/navbar-search";
 import { NavbarShareButton } from "@/components/navbar-share-button";
 import { TargetCompaniesBar } from "@/components/target-companies-bar";
-import { UserNav } from "@/components/user-nav";
 import { AuthGuard } from "@/components/auth-guard";
 
 interface PageProps {
@@ -283,16 +280,6 @@ export default async function DashboardPage({ searchParams }: PageProps) {
               companySlug={activeCompany.slug}
               companyName={activeCompany.name}
             />
-
-            {/* Authentication & User Profile */}
-            <UserNav />
-
-            <Link href="/">
-              <Button variant="outline" size="sm" className="gap-1.5 font-medium cursor-pointer shadow-2xs hover:bg-muted text-xs h-8 px-2 sm:px-3">
-                <ArrowLeft className="size-3.5" />
-                <span className="hidden xs:inline">Back</span>
-              </Button>
-            </Link>
           </div>
         </header>
 
