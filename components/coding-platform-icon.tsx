@@ -8,7 +8,7 @@ import { CodeChef } from "@/components/templates/nova/svgs/codechef";
 import { Codeforces } from "@/components/templates/nova/svgs/codeforces";
 import { AtCoder } from "@/components/templates/nova/svgs/atcoder";
 import { HackerRank } from "@/components/templates/nova/svgs/hackerrank";
-import { Code2, Terminal } from "lucide-react";
+import { Terminal } from "lucide-react";
 
 interface CodingPlatformIconProps {
   platform: CodingPlatformType | string;

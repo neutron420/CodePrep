@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   ExternalLink,
@@ -41,7 +41,6 @@ import { Card } from "@/components/ui/card";
 import { ProblemItem, CodingPlatformType } from "@/types/problem";
 import { CompanyLogo } from "@/components/company-logo";
 import { CompanyTooltip } from "@/components/company-tooltip";
-import { LeetCode } from "@/components/templates/nova/svgs/leetcode";
 import { getCompanyDomain } from "@/lib/company-domains";
 import { COMPANY_CATEGORIES } from "@/lib/company-categories";
 import { getCompanyDetail } from "@/lib/company-details";
