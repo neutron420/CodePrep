@@ -66,7 +66,9 @@ export function useTargetCompanies() {
   const { user } = useAuth();
   const targets = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const userRef = useRef(user);
-  userRef.current = user;
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   // Whenever a logged-in user is detected, sync targets from the cloud
   useEffect(() => {

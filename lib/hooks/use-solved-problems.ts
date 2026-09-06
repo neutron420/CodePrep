@@ -35,7 +35,9 @@ export function useSolvedProblems() {
   const { user } = useAuth();
   const [solvedIds, setSolvedIds] = useState<Set<number>>(getInitialSolvedIds);
   const userRef = useRef(user);
-  userRef.current = user;
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   // Sync with cloud on login
   useEffect(() => {

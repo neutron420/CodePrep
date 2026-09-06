@@ -40,14 +40,14 @@ export function CompanyLogo({ name, className = "size-5", showTooltip = false, p
       sources.push(hardcoded);
     }
 
-    // 1. Unavatar (Vector and HD logos)
-    sources.push(`https://unavatar.io/${domain}`);
-
-    // 2. Clearbit Logo API (High res brand logos)
-    sources.push(`https://logo.clearbit.com/${domain}`);
-
-    // 3. Google S2 Favicons (128px HD)
+    // 1. Google S2 Favicons (128px HD - fast, reliable, no rate-limiting)
     sources.push(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
+
+    // 2. DuckDuckGo Favicon Service (fast, high availability)
+    sources.push(`https://icons.duckduckgo.com/ip3/${domain}.ico`);
+
+    // 3. Unavatar (Vector and HD logos)
+    sources.push(`https://unavatar.io/${domain}`);
 
     // 4. Icon Horse API
     sources.push(`https://icon.horse/icon/${domain}`);

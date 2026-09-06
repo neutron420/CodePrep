@@ -13,6 +13,19 @@ enum Difficulty {
   HARD
 }
 
+enum CodingPlatform {
+  LEETCODE
+  GEEKSFORGEEKS
+  CODECHEF
+  ATCODER
+  CODEFORCES
+  HACKERRANK
+  HACKEREARTH
+  CODESTUDIO
+  INTERVIEWBIT
+  CUSTOM
+}
+
 model Company {
   id        Int      @id @default(autoincrement())
   name      String   @unique
@@ -20,8 +33,9 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  problems    CompanyProblem[]
-  userTargets UserTargetCompany[]
+  problems          CompanyProblem[]
+  userTargets       UserTargetCompany[]
+  communityProblems CommunityProblem[]
 }
 
 model Problem {
@@ -84,8 +98,9 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  targets UserTargetCompany[]
-  solved  UserSolvedProblem[]
+  targets     UserTargetCompany[]
+  solved      UserSolvedProblem[]
+  submissions CommunityProblem[]
 }
 
 model UserTargetCompany {
@@ -112,5 +127,26 @@ model UserSolvedProblem {
 
   @@unique([userId, problemId])
   @@index([userId])
+}
+
+model CommunityProblem {
+  id          Int            @id @default(autoincrement())
+  companyId   Int
+  userId      String?
+  platform    CodingPlatform @default(LEETCODE)
+  title       String
+  problemUrl  String?
+  difficulty  Difficulty     @default(MEDIUM)
+  roundType   String
+  topics      String[]
+  notes       String?
+  upvotes     Int            @default(1)
+  createdAt   DateTime       @default(now())
+
+  company     Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user        User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([createdAt])
 }
 

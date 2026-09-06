@@ -96,20 +96,46 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     };
   }
 
-  // 2. Fetch problems for active company
+  // 2. Fetch standard problems & crowdsourced community problems for active company
   let rawProblems: RawProblemEntry[] = [];
+  let communityProblemsRaw: Array<{
+    id: number;
+    title: string;
+    difficulty: "EASY" | "MEDIUM" | "HARD";
+    problemUrl: string | null;
+    topics: string[];
+    platform: import("@/types/problem").CodingPlatformType;
+    roundType: string;
+    notes: string | null;
+    upvotes: number;
+    company?: { name: string; slug: string };
+  }> = [];
+
   try {
-    rawProblems = (await findProblemsForCompany(activeCompany.id, {
-      page: 1,
-      limit: 1000,
-      sort: "title",
-      order: "asc",
-    })) as unknown as RawProblemEntry[];
+    const [fetchedProblems, fetchedCommunity] = await Promise.all([
+      findProblemsForCompany(activeCompany.id, {
+        page: 1,
+        limit: 1000,
+        sort: "title",
+        order: "asc",
+      }),
+      withDbRetry(() =>
+        prisma.communityProblem.findMany({
+          where: { companyId: activeCompany!.id },
+          orderBy: [{ upvotes: "desc" }, { createdAt: "desc" }],
+          include: {
+            company: { select: { name: true, slug: true } },
+          },
+        })
+      ),
+    ]);
+    rawProblems = fetchedProblems as unknown as RawProblemEntry[];
+    communityProblemsRaw = fetchedCommunity as typeof communityProblemsRaw;
   } catch (err) {
     console.warn("Failed to fetch problems for company in dashboard:", err);
   }
 
-  const problems: ProblemItem[] = rawProblems.map((rp) => ({
+  const standardProblems: ProblemItem[] = rawProblems.map((rp) => ({
     id: rp.problem.id,
     title: rp.problem.title,
     slug: rp.problem.slug,
@@ -120,7 +146,32 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       name: c.company.name,
       slug: c.company.slug,
     })) : [],
+    platform: "LEETCODE",
+    isCommunity: false,
   }));
+
+  const communityProblems: ProblemItem[] = communityProblemsRaw.map((cp) => ({
+    id: cp.id + 1_000_000, // Distinct key range to prevent collision with standard problem IDs
+    title: cp.title,
+    slug: `community-${cp.id}`,
+    difficulty: cp.difficulty,
+    leetcodeUrl: cp.problemUrl || "#",
+    topics: Array.isArray(cp.topics) ? cp.topics : [],
+    companiesAsking: [
+      {
+        name: cp.company?.name || activeCompany.name,
+        slug: cp.company?.slug || activeCompany.slug,
+      },
+    ],
+    platform: cp.platform,
+    isCommunity: true,
+    roundType: cp.roundType,
+    notes: cp.notes,
+    upvotes: cp.upvotes,
+  }));
+
+  // Combined problems: Community-reported interview questions first, then standard list
+  const problems: ProblemItem[] = [...communityProblems, ...standardProblems];
 
   return (
     <AuthGuard>
