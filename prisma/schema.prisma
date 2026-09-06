@@ -130,23 +130,22 @@ model UserSolvedProblem {
 }
 
 model CommunityProblem {
-  id          Int            @id @default(autoincrement())
-  companyId   Int
-  userId      String?
-  platform    CodingPlatform @default(LEETCODE)
-  title       String
-  problemUrl  String?
-  difficulty  Difficulty     @default(MEDIUM)
-  roundType   String
-  topics      String[]
-  notes       String?
-  upvotes     Int            @default(1)
-  createdAt   DateTime       @default(now())
+  id         Int            @id @default(autoincrement())
+  companyId  Int
+  userId     String?
+  platform   CodingPlatform @default(LEETCODE)
+  title      String
+  problemUrl String?
+  difficulty Difficulty     @default(MEDIUM)
+  roundType  String
+  topics     String[]
+  notes      String?
+  upvotes    Int            @default(1)
+  createdAt  DateTime       @default(now())
 
-  company     Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  user        User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([companyId])
   @@index([createdAt])
 }
-
