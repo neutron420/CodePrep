@@ -20,8 +20,8 @@ import {
   RecaptchaVerifier,
   ConfirmationResult,
   setPersistence,
+  indexedDBLocalPersistence,
   browserLocalPersistence,
-  browserSessionPersistence,
 } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from "@/lib/firebase/client";
 
@@ -84,11 +84,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Check 7-day remember-me expiration
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const rememberUntil = localStorage.getItem(REMEMBER_KEY);
-      if (rememberUntil && Date.now() > Number(rememberUntil)) {
-        // Expired after 7 days
-        fbSignOut(auth).catch(console.error);
-        localStorage.removeItem(REMEMBER_KEY);
+      try {
+        const rememberUntil = localStorage.getItem(REMEMBER_KEY);
+        if (rememberUntil) {
+          const expiryTime = Number(rememberUntil);
+          if (!isNaN(expiryTime) && Date.now() > expiryTime) {
+            // Expired after 7 days of inactivity
+            fbSignOut(auth).catch(console.error);
+            localStorage.removeItem(REMEMBER_KEY);
+            if (typeof document !== "undefined") {
+              document.cookie = `codecraft_remember=; path=/; max-age=0; SameSite=Lax`;
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Error reading remember expiration:", e);
       }
     }
 
@@ -97,6 +107,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       if (currentUser) {
         syncUserToDb(currentUser);
+        // Refresh the 7-day expiration window while user is actively using the platform
+        try {
+          const currentRemember = localStorage.getItem(REMEMBER_KEY);
+          if (currentRemember) {
+            const nextExpiry = Date.now() + SEVEN_DAYS_MS;
+            localStorage.setItem(REMEMBER_KEY, String(nextExpiry));
+            if (typeof document !== "undefined") {
+              document.cookie = `codecraft_remember=${nextExpiry}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+            }
+          }
+        } catch {
+          // ignore storage error
+        }
       }
     });
 
@@ -105,14 +128,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const applyPersistence = async (rememberMe: boolean) => {
     try {
-      await setPersistence(
-        auth,
-        rememberMe ? browserLocalPersistence : browserSessionPersistence
-      );
+      // Prioritize indexedDBLocalPersistence (most resilient across mobile & desktop)
+      // and fall back to browserLocalPersistence
+      const persistence = rememberMe
+        ? (indexedDBLocalPersistence || browserLocalPersistence)
+        : (indexedDBLocalPersistence || browserLocalPersistence);
+
+      await setPersistence(auth, persistence);
       if (rememberMe) {
-        localStorage.setItem(REMEMBER_KEY, String(Date.now() + SEVEN_DAYS_MS));
+        const expiry = Date.now() + SEVEN_DAYS_MS;
+        localStorage.setItem(REMEMBER_KEY, String(expiry));
+        if (typeof document !== "undefined") {
+          document.cookie = `codecraft_remember=${expiry}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+        }
       } else {
         localStorage.removeItem(REMEMBER_KEY);
+        if (typeof document !== "undefined") {
+          document.cookie = `codecraft_remember=; path=/; max-age=0; SameSite=Lax`;
+        }
       }
     } catch (err) {
       console.error("Failed to set auth persistence:", err);
@@ -230,9 +263,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const signOut = useCallback(async () => {
-    await fbSignOut(auth);
-    localStorage.removeItem(REMEMBER_KEY);
-    setConfirmationResult(null);
+    try {
+      await fbSignOut(auth);
+      setUser(null);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(REMEMBER_KEY);
+        if (typeof document !== "undefined") {
+          document.cookie = `codecraft_remember=; path=/; max-age=0; SameSite=Lax`;
+        }
+      }
+      setConfirmationResult(null);
+    } catch (err) {
+      console.error("Failed to sign out:", err);
+    }
   }, []);
 
   return (

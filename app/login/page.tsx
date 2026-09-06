@@ -1,11 +1,31 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/context/auth-context";
 import { LoginForm } from "@/components/login-form";
 import { KodePrepLogo } from "@/components/kodeprep-logo";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/dashboard");
+    }
+  }, [user, loading, router]);
+
+  if (loading || user) {
+    return (
+      <div className="flex min-h-svh items-center justify-center bg-background">
+        <div className="size-7 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10 relative overflow-hidden">
       {/* Ambient warm orange theme glow */}

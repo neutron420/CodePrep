@@ -25,7 +25,7 @@ export function LoginForm({
     signInWithGithub,
   } = useAuth();
 
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
