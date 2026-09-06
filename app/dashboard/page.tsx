@@ -115,7 +115,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     notes: string | null;
     upvotes: number;
     company?: { name: string; slug: string };
-    user?: { displayName: string | null; photoUrl: string | null } | null;
+    user?: { displayName: string | null; photoUrl: string | null; email?: string | null } | null;
   }> = [];
 
   try {
@@ -132,7 +132,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           orderBy: [{ upvotes: "desc" }, { createdAt: "desc" }],
           include: {
             company: { select: { name: true, slug: true } },
-            user: { select: { displayName: true, photoUrl: true } },
+            user: { select: { displayName: true, photoUrl: true, email: true } },
           },
         })
       ),
@@ -222,7 +222,14 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       interviewDate,
       notes: cp.notes,
       upvotes: cp.upvotes,
-      submittedBy: cp.user || null,
+      submittedBy: cp.user
+        ? {
+            displayName:
+              cp.user.displayName ||
+              (cp.user.email ? cp.user.email.split("@")[0] : "Community Member"),
+            photoUrl: cp.user.photoUrl,
+          }
+        : null,
     };
   });
 

@@ -460,6 +460,8 @@ export function SubmitQuestionDialog({
             topics: selectedTopics,
             notes: notes.trim() || null,
             userId: isAnonymous ? null : user?.uid || null,
+            authorName: isAnonymous ? null : (user?.displayName || (user?.email ? user.email.split("@")[0] : null)),
+            authorEmail: isAnonymous ? null : (user?.email || null),
           }),
         });
 

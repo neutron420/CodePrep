@@ -69,6 +69,8 @@ export async function POST(req: Request) {
       topics = [],
       notes,
       userId,
+      authorName,
+      authorEmail,
     } = body;
 
     // Validation
@@ -177,8 +179,15 @@ export async function POST(req: Request) {
     if (userId && typeof userId === "string") {
       await prisma.user.upsert({
         where: { id: userId },
-        update: {},
-        create: { id: userId },
+        update: {
+          ...(authorName ? { displayName: authorName } : {}),
+          ...(authorEmail ? { email: authorEmail } : {}),
+        },
+        create: {
+          id: userId,
+          displayName: authorName || null,
+          email: authorEmail || null,
+        },
       });
     }
 

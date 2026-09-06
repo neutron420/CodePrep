@@ -36,6 +36,7 @@ import {
   X,
   RotateCcw,
   ChevronDown,
+  User,
 } from "lucide-react";
 import { useSolvedProblems } from "@/lib/hooks/use-solved-problems";
 import { useTargetCompanies } from "@/lib/hooks/use-target-companies";
@@ -651,7 +652,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         <button
           type="button"
           onClick={() => setIsFilterSheetOpen(true)}
-          className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
+          className={`flex-1 sm:flex-none sm:w-auto sm:px-4 sm:h-9 min-w-0 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
             activeFilterCount > 0
               ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
               : "bg-card hover:bg-muted text-foreground border-border"
@@ -667,7 +668,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         </button>
 
         {/* Sort Select */}
-        <div className="relative flex-1 min-w-0">
+        <div className="relative flex-1 sm:flex-none sm:w-48 sm:h-9 min-w-0">
           <select
             value={sortBy}
             onChange={(e) => {
@@ -675,7 +676,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
               setCurrentPage(1);
             }}
             aria-label="Sort questions"
-            className="w-full appearance-none pl-7 pr-6 py-2 rounded-xl text-xs font-semibold border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-primary/40 truncate text-left"
+            className="w-full h-full appearance-none pl-6 pr-5 py-2 sm:py-0 rounded-xl text-[11.5px] sm:text-xs font-semibold border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-primary/40 truncate text-left"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.id} value={opt.id} className="bg-popover text-popover-foreground py-1 text-xs">
@@ -683,12 +684,12 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
               </option>
             ))}
           </select>
-          <ArrowUpDown className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3 text-muted-foreground pointer-events-none" />
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground pointer-events-none" />
+          <ArrowUpDown className="absolute left-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground pointer-events-none" />
+          <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2 size-3 text-muted-foreground pointer-events-none" />
         </div>
 
         {/* View Mode Toggle */}
-        <div className="flex items-center gap-0.5 p-0.5 bg-muted/60 rounded-xl border border-border/70 shrink-0">
+        <div className="flex items-center gap-0.5 p-0.5 bg-muted/60 rounded-xl border border-border/70 shrink-0 sm:ml-auto">
           <button
             type="button"
             onClick={() => setViewMode("GRID")}
@@ -744,18 +745,18 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       {/* Displayed directly above cards when any filter is active                  */}
       {/* ========================================================================= */}
       {(activeFilterCount > 0 || search.trim()) && (
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider shrink-0 flex items-center gap-1 mr-0.5">
+        <div className="flex flex-wrap items-center gap-1.5 py-1">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0 flex items-center gap-1 mr-0.5">
             <span>Active:</span>
           </span>
 
           {search.trim() && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
-              <span>"{search}"</span>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0 max-w-[85vw] sm:max-w-none">
+              <span className="truncate">"{search}"</span>
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="hover:text-rose-500 cursor-pointer ml-0.5"
+                className="hover:text-rose-500 cursor-pointer ml-0.5 shrink-0"
               >
                 <X className="size-3" />
               </button>
@@ -763,7 +764,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {difficultyFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0 capitalize">
               <span>Difficulty: {difficultyFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -778,7 +779,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           {selectedTopics.map((topic) => (
             <span
               key={topic}
-              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shrink-0"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shrink-0"
             >
               <span>{topic}</span>
               <button
@@ -792,7 +793,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           ))}
 
           {timeframeFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0">
               <span>Time: {timeframeLabels[timeframeFilter]}</span>
               <button
                 type="button"
@@ -805,7 +806,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {platformFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0">
               <span>Platform: {getPlatformBadge(platformFilter as CodingPlatformType).label}</span>
               <button
                 type="button"
@@ -818,7 +819,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {statusFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0 capitalize">
               <span>Status: {statusFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -831,7 +832,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {sourceFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0 capitalize">
               <span>Source: {sourceFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -846,7 +847,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           <button
             type="button"
             onClick={resetAllFilters}
-            className="text-[11px] text-primary hover:underline font-semibold whitespace-nowrap ml-1 cursor-pointer shrink-0"
+            className="text-[11px] text-primary hover:underline font-semibold whitespace-nowrap ml-1 px-1.5 py-0.5 cursor-pointer shrink-0"
           >
             Clear all
           </button>
@@ -994,32 +995,58 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
 
                 {/* Footer Action & Tagged Companies */}
                 <div className="pt-2 border-t space-y-1.5 mt-auto">
-                  {displayCompanies.length > 0 && (
-                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                      <span className="text-[10px] font-medium text-muted-foreground">Asked by:</span>
-                      <div className="flex items-center gap-1.5">
-                        {displayCompanies.slice(0, 4).map((c, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5">
-                            <CompanyLogo
-                              name={c.name}
-                              showTooltip
-                              className="size-5 text-[9px] rounded-md border border-border/60 cursor-pointer hover:scale-110 transition-transform"
-                            />
-                            {p.isCommunity && idx === 0 && (
-                              <div className="flex items-center gap-1 min-w-0">
-                                <span className="text-[11px] font-semibold text-foreground/90 truncate">
+                  {/* Company & Author attribution */}
+                  <div className="space-y-1">
+                    {displayCompanies.length > 0 && (
+                      <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                        <span className="text-[10px] font-medium text-muted-foreground">
+                          {p.isCommunity ? "Interview at:" : "Asked by:"}
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          {displayCompanies.slice(0, 4).map((c, idx) => (
+                            <div key={idx} className="flex items-center gap-1.5">
+                              <CompanyLogo
+                                name={c.name}
+                                showTooltip
+                                className="size-5 text-[9px] rounded-md border border-border/60 cursor-pointer hover:scale-110 transition-transform"
+                              />
+                              {idx === 0 && (
+                                <span className="text-[11px] font-semibold text-foreground/90 truncate max-w-[140px]">
                                   {c.name}
                                 </span>
-                                <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-                                  {p.submittedBy?.displayName ? `• by ${p.submittedBy.displayName}` : "• Anon"}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+
+                    {/* Dedicated Author Line for Community Questions */}
+                    {p.isCommunity && (
+                      <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-0.5">
+                        <span className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
+                          <User className="size-3 text-muted-foreground" />
+                          <span>Author:</span>
+                        </span>
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          {p.submittedBy?.photoUrl ? (
+                            <img
+                              src={p.submittedBy.photoUrl}
+                              alt=""
+                              className="size-4 rounded-full object-cover border border-border shrink-0"
+                            />
+                          ) : (
+                            <span className="size-4 rounded-full bg-primary/10 text-primary text-[9px] font-bold flex items-center justify-center shrink-0">
+                              {(p.submittedBy?.displayName || "C")[0].toUpperCase()}
+                            </span>
+                          )}
+                          <span className="text-[11px] font-medium text-foreground/90 truncate max-w-[140px]">
+                            {p.submittedBy?.displayName || "Community Member"}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Platform Link & Upvote Action */}
                   <div className="flex items-center justify-between pt-0.5 gap-2">
@@ -1126,8 +1153,10 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                                 </span>
                               ) : null}
                               {p.isCommunity && (
-                                <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-                                  • {p.submittedBy?.displayName ? `by ${p.submittedBy.displayName}` : "Anon"}
+                                <span className="text-[10px] text-muted-foreground whitespace-nowrap inline-flex items-center gap-1">
+                                  <span>•</span>
+                                  <User className="size-2.5 text-muted-foreground inline" />
+                                  <span>by {p.submittedBy?.displayName || "Community Member"}</span>
                                 </span>
                               )}
                             </div>
