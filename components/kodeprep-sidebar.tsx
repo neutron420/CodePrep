@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -118,6 +118,8 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
   const { count: bookmarkCount } = useBookmarks();
   const { isMobile, setOpenMobile, toggleSidebar } = useSidebar();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isBookmarksActive = searchParams.get("status") === "BOOKMARKED";
 
   // Group companies into defined categories
   const categorizedCompanies = useMemo(() => {
@@ -223,29 +225,6 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
       {/* 2. SCROLLABLE NAVIGATION AREA                                             */}
       {/* ========================================================================= */}
       <SidebarContent className="flex-1 overflow-y-auto no-scrollbar p-2.5 space-y-2">
-        {/* Quick Access: Saved Questions / Bookmarks */}
-        <button
-          type="button"
-          onClick={() => {
-            router.push(`/dashboard?status=BOOKMARKED${selectedCompanySlug ? `&company=${selectedCompanySlug}` : ""}`);
-            if (isMobile) setOpenMobile(false);
-          }}
-          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent hover:from-amber-500/15 hover:to-amber-500/10 text-foreground border border-amber-500/25 transition-all cursor-pointer group shadow-2xs"
-          title="View all your saved / bookmarked questions"
-        >
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="size-6 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center border border-amber-500/30 group-hover:scale-105 transition-transform shrink-0">
-              <Bookmark className="size-3.5 fill-amber-500 text-amber-500" />
-            </div>
-            <span className="truncate font-semibold text-xs">Saved Questions</span>
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            <span className="text-[10.5px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-              {bookmarkCount}
-            </span>
-          </div>
-        </button>
-
         {drilldownCategory ? (
           /* --------------------------------------------------------------------- */
           /* DRILL-DOWN VIEW (LEVEL 2: COMPANIES IN SELECTED CATEGORY)             */
@@ -508,9 +487,50 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
       </SidebarContent>
 
       {/* ========================================================================= */}
-      {/* 3. COMPACT PROFILE / ACCOUNT FOOTER (TRANSLUCENT & NON-INTRUSIVE)         */}
+      {/* 3. DOWNSIDE NAVIGATION & ACCOUNT FOOTER                                   */}
       {/* ========================================================================= */}
-      <div className="shrink-0 p-2.5 border-t border-border/40 bg-transparent">
+      <div className="shrink-0 p-2.5 border-t border-border/40 bg-transparent space-y-2">
+        {/* Bookmarks downside menu item (matching user reference image style) */}
+        <button
+          type="button"
+          onClick={() => {
+            if (isBookmarksActive) {
+              router.push(`/dashboard${selectedCompanySlug ? `?company=${selectedCompanySlug}` : ""}`);
+            } else {
+              router.push(`/dashboard?status=BOOKMARKED${selectedCompanySlug ? `&company=${selectedCompanySlug}` : ""}`);
+            }
+            if (isMobile) setOpenMobile(false);
+          }}
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer group ${
+            isBookmarksActive
+              ? "bg-muted text-foreground font-semibold border border-border/60 shadow-2xs"
+              : "text-foreground/90 hover:bg-muted/60 hover:text-foreground"
+          }`}
+          title="Bookmarks"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Bookmark
+              className={`size-4 shrink-0 transition-colors ${
+                isBookmarksActive
+                  ? "text-cyan-400 fill-cyan-400/20"
+                  : "text-cyan-400 group-hover:text-cyan-300"
+              }`}
+            />
+            <span className="truncate">Bookmarks</span>
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            {bookmarkCount > 0 && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-md font-mono text-muted-foreground bg-muted/60">
+                {bookmarkCount}
+              </span>
+            )}
+            {isBookmarksActive && (
+              <span className="w-1 h-3.5 rounded-full bg-cyan-400 shrink-0" />
+            )}
+          </div>
+        </button>
+
         {user ? (
           <div className="rounded-xl border border-border/50 bg-muted/40 p-2 flex items-center justify-between gap-2 shadow-2xs">
             {/* User Details */}
