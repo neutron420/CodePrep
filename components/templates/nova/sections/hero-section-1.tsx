@@ -50,7 +50,7 @@ export default function HeroSection() {
                   Crack interviews, company by company.
                 </h1>
                 <p className="text-muted-foreground mt-4 text-balance">
-                  3,257 LeetCode problems across 470 companies, tagged by topic.
+                  15,000+ interview questions & 3,200+ DSA problems across 690+ companies, tagged by topic.
                   Tick off what you solve.
                 </p>
 

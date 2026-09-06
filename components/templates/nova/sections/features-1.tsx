@@ -16,7 +16,7 @@ export default function Features() {
             Everything you need to prep, in one place
           </h2>
           <p className="text-muted-foreground mt-4 text-balance">
-            470 companies, 3,257 problems, 74 topics. Filter, solve, and track
+            690+ companies, 15,000+ questions, 74 topics. Filter, solve, and track
             your progress.
           </p>
         </div>

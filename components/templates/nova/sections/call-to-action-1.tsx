@@ -10,8 +10,7 @@ export default function CallToAction() {
             Ready to Get Started?
           </h2>
           <p className="text-muted-foreground mx-auto mt-4 max-w-md text-balance">
-            Free and open for everyone. No account, no sign-up - just pick a
-            company and start solving.
+            Free and open for everyone. Explore questions from 690+ companies, track your solved progress, and crack your upcoming coding rounds.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link href="/dashboard">

@@ -19,8 +19,8 @@ const FALLBACK_TOPICS = [
 
 export default async function Topics() {
   let topics: { id: number; name: string; _count: { problems: number } }[] = FALLBACK_TOPICS;
-  let companyCount = 470;
-  let problemCount = 3257;
+  let companyCount = 694;
+  let problemCount = 3277;
 
   try {
     const topicsResult = await withDbRetry(() =>

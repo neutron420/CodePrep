@@ -12,19 +12,19 @@ const faqItems = [
     id: "item-1",
     question: "Where does the problem data come from?",
     answer:
-      "The problems are sourced from publicly shared company-wise LeetCode lists, covering 470 companies and 3,257 unique problems. Each problem links directly to LeetCode.",
+      "The problems are sourced from verified company-wise interview archives and crowdsourced community reports, covering 690+ companies and 15,000+ tagged interview questions (3,200+ unique problems). Each problem links directly to its coding platform.",
   },
   {
     id: "item-2",
     question: "Do I need an account?",
     answer:
-      "No. CodeCraft is completely open - there is no sign-up, no login, and nothing to install. Browse any company list and start solving immediately.",
+      "You can start exploring immediately for free. Signing in with Google, GitHub, or Email lets you save your solved progress, pin target companies, and verify community questions.",
   },
   {
     id: "item-3",
     question: "Is my progress saved?",
     answer:
-      "Not yet. Since there are no accounts, progress tracking is not available today. It is on the roadmap as an optional feature.",
+      "Yes! When you sign in, your solved questions, target company pins, and verified question contributions are saved and synced seamlessly across your devices.",
   },
   {
     id: "item-4",
