@@ -78,7 +78,7 @@ async function main(): Promise<void> {
 
   for (const dir of entries) {
     // Resolve company
-    let targetSlug = ALIASES[dir] ?? slugifyCompanyName(dir);
+    const targetSlug = ALIASES[dir] ?? slugifyCompanyName(dir);
     let matchedCompany = companyBySlug.get(targetSlug) ?? companyByClean.get(dir.toLowerCase().replace(/[^a-z0-9]/g, ""));
 
     if (!matchedCompany && ALIASES[dir]) {

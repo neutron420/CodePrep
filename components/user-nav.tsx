@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/context/auth-context";
 import { LogOut, Phone } from "lucide-react";
 import Link from "next/link";
 import { FlowButton } from "@/components/ui/flow-button";
+import { VerifiedBadge } from "@/components/ui/verified-badge";
 
 export function UserNav() {
   const { user, loading, signOut } = useAuth();
@@ -80,9 +81,12 @@ export function UserNav() {
         <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border bg-popover text-popover-foreground shadow-xl z-50 p-1.5 animate-in fade-in-50 zoom-in-95 duration-150">
           {/* User Info Header */}
           <div className="px-3 py-2 border-b border-border/60">
-            <p className="text-xs font-bold text-foreground truncate">
-              {displayName}
-            </p>
+            <div className="flex items-center gap-1.5 min-w-0">
+              <p className="text-xs font-bold text-foreground truncate">
+                {displayName}
+              </p>
+              <VerifiedBadge className="size-3.5 shrink-0" />
+            </div>
             {identifier && (
               <p className="text-[11px] text-muted-foreground truncate font-mono mt-0.5">
                 {identifier}

@@ -37,9 +37,12 @@ import {
   ArrowLeft,
   Search,
   Plus,
+  Bookmark,
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/context/auth-context";
+import { useBookmarks } from "@/lib/hooks/use-bookmarks";
+import { VerifiedBadge } from "@/components/ui/verified-badge";
 import { COMPANY_CATEGORIES, CompanyCategoryDef } from "@/lib/company-categories";
 import { CompanyLogo } from "@/components/company-logo";
 import { KodePrepLogo } from "@/components/kodeprep-logo";
@@ -112,6 +115,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [categorySearchQuery, setCategorySearchQuery] = useState("");
   const { user, signOut } = useAuth();
+  const { count: bookmarkCount } = useBookmarks();
   const { isMobile, setOpenMobile, toggleSidebar } = useSidebar();
   const router = useRouter();
 
@@ -219,6 +223,29 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
       {/* 2. SCROLLABLE NAVIGATION AREA                                             */}
       {/* ========================================================================= */}
       <SidebarContent className="flex-1 overflow-y-auto no-scrollbar p-2.5 space-y-2">
+        {/* Quick Access: Saved Questions / Bookmarks */}
+        <button
+          type="button"
+          onClick={() => {
+            router.push(`/dashboard?status=BOOKMARKED${selectedCompanySlug ? `&company=${selectedCompanySlug}` : ""}`);
+            if (isMobile) setOpenMobile(false);
+          }}
+          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent hover:from-amber-500/15 hover:to-amber-500/10 text-foreground border border-amber-500/25 transition-all cursor-pointer group shadow-2xs"
+          title="View all your saved / bookmarked questions"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="size-6 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center border border-amber-500/30 group-hover:scale-105 transition-transform shrink-0">
+              <Bookmark className="size-3.5 fill-amber-500 text-amber-500" />
+            </div>
+            <span className="truncate font-semibold text-xs">Saved Questions</span>
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            <span className="text-[10.5px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+              {bookmarkCount}
+            </span>
+          </div>
+        </button>
+
         {drilldownCategory ? (
           /* --------------------------------------------------------------------- */
           /* DRILL-DOWN VIEW (LEVEL 2: COMPANIES IN SELECTED CATEGORY)             */
@@ -501,9 +528,12 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
                 </div>
               )}
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-bold text-foreground truncate leading-tight">
-                  {user.displayName || user.email?.split("@")[0] || user.phoneNumber || "User"}
-                </p>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <p className="text-xs font-bold text-foreground truncate leading-tight">
+                    {user.displayName || user.email?.split("@")[0] || user.phoneNumber || "User"}
+                  </p>
+                  <VerifiedBadge className="size-3.5 shrink-0" />
+                </div>
                 <p className="text-[10.5px] text-muted-foreground truncate font-mono mt-0.5 leading-tight">
                   {user.email || user.phoneNumber || "Signed in"}
                 </p>

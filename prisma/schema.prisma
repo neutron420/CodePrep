@@ -102,6 +102,7 @@ model User {
 
   targets     UserTargetCompany[]
   solved      UserSolvedProblem[]
+  bookmarks   UserBookmarkProblem[]
   submissions CommunityProblem[]
 }
 
@@ -126,6 +127,18 @@ model UserSolvedProblem {
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId])
+  @@index([userId])
+}
+
+model UserBookmarkProblem {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  problemId Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, problemId])
   @@index([userId])

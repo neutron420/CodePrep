@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   ExternalLink,
   Search,
@@ -37,8 +38,10 @@ import {
   RotateCcw,
   ChevronDown,
   User,
+  Bookmark,
 } from "lucide-react";
 import { useSolvedProblems } from "@/lib/hooks/use-solved-problems";
+import { useBookmarks } from "@/lib/hooks/use-bookmarks";
 import { useTargetCompanies } from "@/lib/hooks/use-target-companies";
 import { Card } from "@/components/ui/card";
 import { ProblemItem, CodingPlatformType } from "@/types/problem";
@@ -197,8 +200,22 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [timeframeFilter, setTimeframeFilter] = useState<string>("ALL");
   const [platformFilter, setPlatformFilter] = useState<string>("ALL");
-  const [statusFilter, setStatusFilter] = useState<"ALL" | "SOLVED" | "UNSOLVED">("ALL");
   const [sourceFilter, setSourceFilter] = useState<"ALL" | "CURATED" | "COMMUNITY">("ALL");
+
+  const searchParams = useSearchParams();
+  const statusParam = searchParams.get("status");
+  const [prevStatusParam, setPrevStatusParam] = useState(statusParam);
+  const [statusFilter, setStatusFilter] = useState<"ALL" | "SOLVED" | "BOOKMARKED" | "UNSOLVED">(
+    statusParam === "BOOKMARKED" ? "BOOKMARKED" : "ALL"
+  );
+
+  // Sync state when URL status parameter changes
+  if (statusParam !== prevStatusParam) {
+    setPrevStatusParam(statusParam);
+    if (statusParam === "BOOKMARKED") {
+      setStatusFilter("BOOKMARKED");
+    }
+  }
 
   // Secondary Toolbar: Sort, View, Pagination & Modals
   const [sortBy, setSortBy] = useState<SortOptionType>("recent");
@@ -228,6 +245,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
   const pageSize = 12;
 
   const { isSolved } = useSolvedProblems();
+  const { isBookmarked, toggleBookmark } = useBookmarks();
   const { isTarget, toggleTarget } = useTargetCompanies();
 
   // Responsive mobile detector
@@ -416,9 +434,10 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         return false;
       }
 
-      // 6. Solved Status
+      // 6. Solved / Bookmark Status
       if (statusFilter === "SOLVED" && !isSolved(p.id)) return false;
       if (statusFilter === "UNSOLVED" && isSolved(p.id)) return false;
+      if (statusFilter === "BOOKMARKED" && !isBookmarked(p.id)) return false;
 
       // 7. Source
       if (sourceFilter === "COMMUNITY" && !p.isCommunity) return false;
@@ -436,6 +455,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
     statusFilter,
     sourceFilter,
     isSolved,
+    isBookmarked,
   ]);
 
   // Sort problems safely
@@ -486,6 +506,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
   const mediumCount = useMemo(() => problems.filter((p) => p.difficulty === "MEDIUM").length, [problems]);
   const hardCount = useMemo(() => problems.filter((p) => p.difficulty === "HARD").length, [problems]);
   const solvedCount = useMemo(() => problems.filter((p) => isSolved(p.id)).length, [problems, isSolved]);
+  const bookmarkedCount = useMemo(() => problems.filter((p) => isBookmarked(p.id)).length, [problems, isBookmarked]);
   const communityCount = useMemo(() => problems.filter((p) => p.isCommunity).length, [problems]);
   const curatedCount = problems.length - communityCount;
   const thirtyDaysCount = useMemo(() => problems.filter((p) => p.timeframe === "THIRTY_DAYS").length, [problems]);
@@ -667,6 +688,33 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
         </button>
 
+        {/* Quick Saved Filter Toggle */}
+        <button
+          type="button"
+          onClick={() => {
+            setStatusFilter((prev) => (prev === "BOOKMARKED" ? "ALL" : "BOOKMARKED"));
+            setCurrentPage(1);
+          }}
+          className={`flex items-center gap-1.5 px-3 py-2 sm:h-9 rounded-md text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
+            statusFilter === "BOOKMARKED"
+              ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/40 hover:bg-amber-500/25"
+              : "bg-card hover:bg-muted text-muted-foreground hover:text-foreground border-border"
+          }`}
+          title={statusFilter === "BOOKMARKED" ? "Showing saved questions (click to clear)" : "Filter saved questions"}
+        >
+          <Bookmark className={`size-3.5 shrink-0 ${statusFilter === "BOOKMARKED" ? "fill-amber-500 text-amber-500" : ""}`} />
+          <span className="hidden xs:inline">Saved</span>
+          <span
+            className={`text-[10px] font-mono font-bold px-1.5 py-0.2 rounded-full ${
+              statusFilter === "BOOKMARKED"
+                ? "bg-amber-500/25 text-amber-600 dark:text-amber-400"
+                : "bg-muted text-muted-foreground"
+            }`}
+          >
+            {bookmarkedCount}
+          </span>
+        </button>
+
         {/* Sort Select */}
         <div className="relative flex-1 sm:flex-none sm:w-48 sm:h-9 min-w-0">
           <select
@@ -764,7 +812,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           <div className="grid grid-cols-2 max-w-2xl gap-1.5 sm:gap-2">
             {search.trim() && (
               <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
-                <span className="truncate">"{search}"</span>
+                <span className="truncate">&ldquo;{search}&rdquo;</span>
                 <button
                   type="button"
                   onClick={() => setSearch("")}
@@ -894,6 +942,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {paginatedProblems.map((p) => {
             const solved = isSolved(p.id);
+            const bookmarked = isBookmarked(p.id);
             const platformInfo = getPlatformBadge(p.platform);
             const isUpvoted = votedIds.has(p.id);
             const currentVotes = (p.upvotes ?? 0) + (upvotesState[p.id] ?? 0);
@@ -912,7 +961,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                 }`}
               >
                 <div>
-                  {/* Top Bar: Platform Logo + Round / ID + Recency + Difficulty */}
+                  {/* Top Bar: Platform Logo + Round / ID + Recency + Difficulty + Bookmark */}
                   <div className="flex items-center justify-between gap-1.5 mb-2">
                     <div className="flex items-center gap-1.5 flex-wrap min-w-0">
                       <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-3.5 sm:size-4 shrink-0" />
@@ -960,18 +1009,37 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                       ) : null}
                     </div>
 
-                    {/* Difficulty Badge */}
-                    <span
-                      className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 ${
-                        p.difficulty === "EASY"
-                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                          : p.difficulty === "MEDIUM"
-                          ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                          : "bg-rose-500/10 text-rose-600 dark:text-rose-400"
-                      }`}
-                    >
-                      {p.difficulty}
-                    </span>
+                    {/* Difficulty Badge & Bookmark Button */}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span
+                        className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 ${
+                          p.difficulty === "EASY"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            : p.difficulty === "MEDIUM"
+                            ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                            : "bg-rose-500/10 text-rose-600 dark:text-rose-400"
+                        }`}
+                      >
+                        {p.difficulty}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleBookmark(p.id, p.title);
+                        }}
+                        className={`size-6.5 rounded-md flex items-center justify-center border transition-all cursor-pointer ${
+                          bookmarked
+                            ? "bg-amber-500/15 border-amber-500/40 text-amber-500 hover:bg-amber-500/25 shadow-2xs"
+                            : "bg-muted/40 border-border/70 text-muted-foreground hover:text-foreground hover:bg-muted"
+                        }`}
+                        title={bookmarked ? "Remove from bookmarks" : "Save question"}
+                        aria-label={bookmarked ? "Remove from bookmarks" : "Save question"}
+                      >
+                        <Bookmark className={`size-3.5 ${bookmarked ? "fill-amber-500 text-amber-500" : ""}`} />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Problem Title: Clean title without repeating LC number */}
@@ -1122,6 +1190,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
               <tbody className="divide-y divide-border/60">
                 {paginatedProblems.map((p) => {
                   const solved = isSolved(p.id);
+                  const bookmarked = isBookmarked(p.id);
                   const platformInfo = getPlatformBadge(p.platform);
                   const isUpvoted = votedIds.has(p.id);
                   const currentVotes = (p.upvotes ?? 0) + (upvotesState[p.id] ?? 0);
@@ -1239,6 +1308,19 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                               {isUpvoted && <span className="text-[9px] font-semibold text-muted-foreground">✓</span>}
                             </button>
                           )}
+                          <button
+                            type="button"
+                            onClick={() => toggleBookmark(p.id, p.title)}
+                            className={`size-6.5 rounded-md flex items-center justify-center border transition-all cursor-pointer shrink-0 ${
+                              bookmarked
+                                ? "bg-amber-500/15 border-amber-500/40 text-amber-500 hover:bg-amber-500/25 shadow-2xs"
+                                : "bg-muted/40 border-border/70 text-muted-foreground hover:text-foreground hover:bg-muted"
+                            }`}
+                            title={bookmarked ? "Remove from bookmarks" : "Save question"}
+                            aria-label={bookmarked ? "Remove from bookmarks" : "Save question"}
+                          >
+                            <Bookmark className={`size-3.5 ${bookmarked ? "fill-amber-500 text-amber-500" : ""}`} />
+                          </button>
                           {p.leetcodeUrl ? (
                             <a
                               href={p.leetcodeUrl}
@@ -1419,14 +1501,15 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
               </div>
             </div>
 
-            {/* Filter Section 4: Solved Status */}
+            {/* Filter Section 4: Solved / Saved Status */}
             <div className="space-y-1.5">
               <label className="font-semibold text-foreground text-xs uppercase tracking-wider block">
-                Solved Status
+                Question Status
               </label>
-              <div className="grid grid-cols-3 gap-1.5">
+              <div className="grid grid-cols-4 gap-1.5">
                 {[
                   { id: "ALL", label: "All", count: problems.length },
+                  { id: "BOOKMARKED", label: "Saved", count: bookmarkedCount },
                   { id: "SOLVED", label: "Solved", count: solvedCount },
                   { id: "UNSOLVED", label: "Unsolved", count: problems.length - solvedCount },
                 ].map((st) => (
