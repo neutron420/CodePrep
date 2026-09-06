@@ -6,7 +6,6 @@ import {
   Search,
   LayoutGrid,
   List,
-  FileCode2,
   Tag,
   Globe,
   MapPin,
@@ -97,45 +96,45 @@ function getPlatformBadge(platform?: CodingPlatformType) {
 function CategoryIcon({ name }: { name?: string }) {
   switch (name) {
     case "Flame":
-      return <Flame className="size-3.5 text-rose-500 shrink-0" />;
+      return <Flame className="size-3 text-rose-500 shrink-0" />;
     case "Sparkles":
-      return <Zap className="size-3.5 text-fuchsia-500 shrink-0" />;
+      return <Zap className="size-3 text-fuchsia-500 shrink-0" />;
     case "TrendingUp":
-      return <TrendingUp className="size-3.5 text-amber-500 shrink-0" />;
+      return <TrendingUp className="size-3 text-amber-500 shrink-0" />;
     case "Landmark":
-      return <Landmark className="size-3.5 text-emerald-500 shrink-0" />;
+      return <Landmark className="size-3 text-emerald-500 shrink-0" />;
     case "Crown":
-      return <Crown className="size-3.5 text-purple-500 shrink-0" />;
+      return <Crown className="size-3 text-purple-500 shrink-0" />;
     case "Cloud":
-      return <Cloud className="size-3.5 text-sky-500 shrink-0" />;
+      return <Cloud className="size-3 text-sky-500 shrink-0" />;
     case "ShieldCheck":
-      return <ShieldCheck className="size-3.5 text-teal-500 shrink-0" />;
+      return <ShieldCheck className="size-3 text-teal-500 shrink-0" />;
     case "Cpu":
-      return <Cpu className="size-3.5 text-indigo-500 shrink-0" />;
+      return <Cpu className="size-3 text-indigo-500 shrink-0" />;
     case "ShoppingBag":
-      return <ShoppingBag className="size-3.5 text-pink-500 shrink-0" />;
+      return <ShoppingBag className="size-3 text-pink-500 shrink-0" />;
     case "Car":
-      return <Car className="size-3.5 text-blue-600 shrink-0" />;
+      return <Car className="size-3 text-blue-600 shrink-0" />;
     case "UtensilsCrossed":
-      return <UtensilsCrossed className="size-3.5 text-orange-500 shrink-0" />;
+      return <UtensilsCrossed className="size-3 text-orange-500 shrink-0" />;
     case "MessageSquare":
-      return <MessageSquare className="size-3.5 text-cyan-500 shrink-0" />;
+      return <MessageSquare className="size-3 text-cyan-500 shrink-0" />;
     case "Gamepad2":
-      return <Gamepad2 className="size-3.5 text-violet-500 shrink-0" />;
+      return <Gamepad2 className="size-3 text-violet-500 shrink-0" />;
     case "Activity":
-      return <Activity className="size-3.5 text-rose-600 shrink-0" />;
+      return <Activity className="size-3 text-rose-600 shrink-0" />;
     case "Briefcase":
-      return <Briefcase className="size-3.5 text-blue-500 shrink-0" />;
+      return <Briefcase className="size-3 text-blue-500 shrink-0" />;
     case "GraduationCap":
-      return <GraduationCap className="size-3.5 text-yellow-500 shrink-0" />;
+      return <GraduationCap className="size-3 text-yellow-500 shrink-0" />;
     case "Compass":
-      return <Compass className="size-3.5 text-emerald-600 shrink-0" />;
+      return <Compass className="size-3 text-emerald-600 shrink-0" />;
     case "Radio":
-      return <Radio className="size-3.5 text-violet-600 shrink-0" />;
+      return <Radio className="size-3 text-violet-600 shrink-0" />;
     case "Zap":
-      return <Zap className="size-3.5 text-amber-600 shrink-0" />;
+      return <Zap className="size-3 text-amber-600 shrink-0" />;
     default:
-      return <Building2 className="size-3.5 text-primary shrink-0" />;
+      return <Building2 className="size-3 text-primary shrink-0" />;
   }
 }
 
@@ -187,8 +186,8 @@ interface CompanyProblemGridProps {
 
 const SORT_OPTIONS = [
   { id: "recent", label: "Most Recent" },
-  { id: "number-asc", label: "LeetCode # (1 → 3000)" },
-  { id: "number-desc", label: "LeetCode # (3000 → 1)" },
+  { id: "number-asc", label: "LC # (1 → 3000)" },
+  { id: "number-desc", label: "LC # (3000 → 1)" },
   { id: "title-asc", label: "Title (A → Z)" },
   { id: "diff-asc", label: "Difficulty (Easy → Hard)" },
   { id: "diff-desc", label: "Difficulty (Hard → Easy)" },
@@ -329,9 +328,6 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       .sort((a, b) => b[1] - a[1])
       .map(([topic, count]) => ({ topic, count }));
   }, [problems]);
-
-  // Popular topics for the horizontal strip (top 8)
-  const popularTopics = useMemo(() => allTopicsWithCounts.slice(0, 8), [allTopicsWithCounts]);
 
   // Available platforms in this company problem set
   const availablePlatforms = useMemo(() => {
@@ -521,103 +517,103 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
   const currentSortLabel = SORT_OPTIONS.find((s) => s.id === sortBy)?.label || "Most Recent";
 
   return (
-    <div className="space-y-4 sm:space-y-5">
+    <div className="space-y-3 sm:space-y-4">
       {/* ========================================================================= */}
-      {/* 1. COMPANY HEADER                                                         */}
-      {/* Compact, clean, horizontal desktop layout, naturally stacked mobile       */}
+      {/* 1. COMPACT & CLEAN COMPANY HEADER                                         */}
+      {/* Sleek mobile-first design, all information preserved in minimal height    */}
       {/* ========================================================================= */}
-      <div className="p-3.5 sm:p-5 md:p-6 rounded-2xl bg-card border shadow-xs relative overflow-hidden">
-        {/* Ambient subtle glow */}
-        <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 size-56 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-5 relative">
-          {/* Identity: Logo + Title + Category + Meta */}
-          <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 flex-1">
-            <div className="shrink-0 p-1.5 sm:p-2 rounded-xl bg-white dark:bg-card/90 border border-border/80 shadow-xs flex items-center justify-center">
+      <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-card border shadow-xs relative overflow-hidden">
+        <div className="flex items-start justify-between gap-2.5 sm:gap-4">
+          {/* Identity: Logo + Details */}
+          <div className="flex items-start gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+            <div className="shrink-0 p-1 sm:p-1.5 rounded-lg sm:rounded-xl bg-white dark:bg-card/90 border border-border/80 shadow-xs flex items-center justify-center">
               <CompanyLogo
                 name={companyName}
                 showTooltip
                 problemCount={problems.length}
-                className="size-11 sm:size-14 md:size-16 text-base sm:text-xl rounded-lg cursor-pointer transition-transform hover:scale-105"
+                className="size-9 sm:size-12 md:size-14 text-sm sm:text-lg rounded-md sm:rounded-lg cursor-pointer transition-transform hover:scale-105"
               />
             </div>
 
-            <div className="min-w-0 flex-1 space-y-1">
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <div className="min-w-0 flex-1 space-y-0.5 sm:space-y-1">
+              <div className="flex flex-wrap items-center gap-1.5">
                 <CompanyTooltip name={companyName} problemCount={problems.length} side="bottom" align="start">
-                  <h1 className="text-lg sm:text-2xl font-bold text-foreground tracking-tight leading-tight hover:text-primary transition-colors cursor-pointer">
+                  <h1 className="text-base sm:text-xl font-bold text-foreground tracking-tight leading-tight hover:text-primary transition-colors cursor-pointer">
                     {companyName}
                   </h1>
                 </CompanyTooltip>
 
                 {category && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-muted/80 text-foreground text-[10px] sm:text-xs font-semibold border border-border/70 shadow-2xs">
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-muted/80 text-foreground text-[10px] sm:text-xs font-semibold border border-border/70 shadow-2xs">
                     <CategoryIcon name={category.iconName} />
-                    <span className="truncate max-w-[140px] sm:max-w-[180px]">{category.name}</span>
+                    <span className="truncate max-w-[120px] sm:max-w-[180px]">{category.name}</span>
                   </span>
                 )}
               </div>
 
-              {/* Description - 2 lines on mobile, full on desktop */}
-              <p className="text-xs sm:text-[13px] text-muted-foreground leading-relaxed line-clamp-2 sm:line-clamp-3">
-                {details.description}
-              </p>
+              {/* Description - Compact 1 line on mobile */}
+              {details.description && (
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug line-clamp-1 sm:line-clamp-2">
+                  {details.description}
+                </p>
+              )}
 
               {/* Location, Founded & Website */}
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-0.5 text-[11px] text-muted-foreground">
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="size-3 text-muted-foreground/70 shrink-0" />
-                  <span>{details.hq}</span>
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Calendar className="size-3 text-muted-foreground/70 shrink-0" />
-                  <span>
-                    {details.founded && (details.founded.startsWith("19") || details.founded.startsWith("20"))
-                      ? `Est. ${details.founded}`
-                      : details.founded}
+              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[10px] sm:text-[11px] text-muted-foreground pt-0.5">
+                {details.hq && (
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="size-2.5 text-muted-foreground/70 shrink-0" />
+                    <span>{details.hq}</span>
                   </span>
-                </span>
+                )}
+                {details.founded && (
+                  <span className="inline-flex items-center gap-1">
+                    <Calendar className="size-2.5 text-muted-foreground/70 shrink-0" />
+                    <span>
+                      {details.founded.startsWith("19") || details.founded.startsWith("20")
+                        ? `Est. ${details.founded}`
+                        : details.founded}
+                    </span>
+                  </span>
+                )}
                 {domain && (
                   <a
                     href={`https://${domain}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-primary hover:underline font-mono text-[11px] transition-colors group"
+                    className="inline-flex items-center gap-1 text-primary hover:underline font-mono text-[10px] sm:text-[11px] transition-colors"
                   >
-                    <Globe className="size-3 shrink-0 text-muted-foreground group-hover:text-primary" />
+                    <Globe className="size-2.5 shrink-0 text-muted-foreground" />
                     <span>{domain}</span>
-                    <ExternalLink className="size-2.5 shrink-0" />
+                    <ExternalLink className="size-2 shrink-0" />
                   </a>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Right Action: Pin Target */}
-          <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
-            <button
-              type="button"
-              onClick={() => toggleTarget(slug)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all shadow-2xs cursor-pointer ${
-                isTarget(slug)
-                  ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/25"
-                  : "bg-background hover:bg-muted text-muted-foreground hover:text-foreground border-border"
-              }`}
-              title={isTarget(slug) ? "Pinned in My Target Companies" : "Pin to My Target Companies"}
-            >
-              <Star className={`size-3.5 shrink-0 ${isTarget(slug) ? "fill-amber-400 text-amber-500" : ""}`} />
-              <span>{isTarget(slug) ? "Targeted" : "Pin Target"}</span>
-            </button>
-          </div>
+          {/* Right Action: Pin Target Button */}
+          <button
+            type="button"
+            onClick={() => toggleTarget(slug)}
+            className={`inline-flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold border transition-all shadow-2xs cursor-pointer shrink-0 ${
+              isTarget(slug)
+                ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/25"
+                : "bg-background hover:bg-muted text-muted-foreground hover:text-foreground border-border"
+            }`}
+            title={isTarget(slug) ? "Pinned in My Target Companies" : "Pin to My Target Companies"}
+          >
+            <Star className={`size-3 sm:size-3.5 shrink-0 ${isTarget(slug) ? "fill-amber-400 text-amber-500" : ""}`} />
+            <span className="hidden xs:inline">{isTarget(slug) ? "Targeted" : "Pin Target"}</span>
+          </button>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. SEARCH — PRIMARY DISCOVERY CONTROL                                     */}
-      {/* Prominent, large, full-width search with keyboard shortcut & clear button */}
+      {/* 2. SEARCH — PROMINENT, UNCLIPPED & FAST                                   */}
       {/* ========================================================================= */}
       <div className="relative w-full">
-        <Search className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 size-4 sm:size-4.5 text-muted-foreground pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 sm:size-4 text-muted-foreground pointer-events-none" />
         <input
           ref={searchInputRef}
           type="text"
@@ -626,11 +622,11 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             setSearch(e.target.value);
             setCurrentPage(1);
           }}
-          placeholder="Search problems by title, number, topic, platform..."
-          className="w-full pl-10 sm:pl-11 pr-20 sm:pr-24 py-2.5 sm:py-3 rounded-xl border border-border bg-card text-foreground text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-muted-foreground shadow-2xs"
+          placeholder="Search by title, number, topic..."
+          className="w-full pl-8 sm:pl-9 pr-14 sm:pr-18 py-2 sm:py-2.5 rounded-xl border border-border bg-card text-foreground text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-muted-foreground shadow-2xs"
         />
 
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
           {search ? (
             <button
               type="button"
@@ -652,157 +648,59 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. POPULAR TOPICS                                                         */}
-      {/* Horizontal scrolling row on mobile, single row on desktop                 */}
+      {/* 3. COMPACT TOOLBAR (COUNT + FILTERS + SORT + VIEW)                        */}
+      {/* One unified clean line - maximum screen space for actual questions        */}
       {/* ========================================================================= */}
-      {popularTopics.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider shrink-0 flex items-center gap-1 mr-1">
-            <Tag className="size-3 text-primary shrink-0" />
-            <span>Popular Topics:</span>
+      <div className="flex items-center justify-between gap-2 pt-0.5">
+        {/* Left: Total Questions Count */}
+        <div className="flex items-baseline gap-1.5 min-w-0">
+          <span className="text-xs sm:text-sm font-bold text-foreground">
+            {filteredProblems.length.toLocaleString()} Questions
           </span>
-
-          {popularTopics.map(({ topic, count }) => {
-            const isSelected = selectedTopics.includes(topic);
-            return (
-              <button
-                key={topic}
-                type="button"
-                onClick={() => toggleTopic(topic)}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer border ${
-                  isSelected
-                    ? "bg-primary text-primary-foreground border-primary shadow-2xs font-semibold"
-                    : "bg-card hover:bg-muted text-foreground border-border/80"
-                }`}
-              >
-                <span>{topic}</span>
-                <span
-                  className={`text-[10px] font-mono ${
-                    isSelected ? "text-primary-foreground/90 font-bold" : "text-muted-foreground"
-                  }`}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-
-          {allTopicsWithCounts.length > 8 && (
-            <button
-              type="button"
-              onClick={() => setIsFilterSheetOpen(true)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-primary hover:bg-primary/10 transition-all shrink-0 cursor-pointer whitespace-nowrap"
-            >
-              <span>+ View all ({allTopicsWithCounts.length})</span>
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* 4. PROBLEM SUMMARY + 5. DIFFICULTY (PRIMARY FILTER)                       */}
-      {/* Clean segmented control for difficulty directly accessible                */}
-      {/* ========================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
-        {/* Total Problems Count */}
-        <div className="flex items-baseline gap-2">
-          <h2 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
-            {filteredProblems.length.toLocaleString()} Problems
-          </h2>
           {filteredProblems.length !== problems.length && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-[10px] sm:text-xs text-muted-foreground hidden xs:inline">
               (of {problems.length.toLocaleString()})
             </span>
           )}
         </div>
 
-        {/* Segmented Control for Difficulty Filter */}
-        <div className="flex items-center gap-1 p-1 bg-muted/60 rounded-xl border border-border/70 text-xs font-medium overflow-x-auto no-scrollbar self-start sm:self-auto">
-          {[
-            { id: "ALL", label: "All", count: problems.length },
-            { id: "EASY", label: "Easy", count: easyCount },
-            { id: "MEDIUM", label: "Medium", count: mediumCount },
-            { id: "HARD", label: "Hard", count: hardCount },
-          ].map((diff) => {
-            const isSelected = difficultyFilter === diff.id;
-            return (
-              <button
-                key={diff.id}
-                type="button"
-                onClick={() => {
-                  setDifficultyFilter(diff.id);
-                  setCurrentPage(1);
-                }}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap text-xs flex items-center gap-1.5 shrink-0 ${
-                  isSelected
-                    ? "bg-card text-foreground font-bold shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <span>{diff.label}</span>
-                <span
-                  className={`text-[10px] font-mono px-1 py-0.2 rounded font-semibold ${
-                    isSelected
-                      ? diff.id === "EASY"
-                        ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                        : diff.id === "MEDIUM"
-                        ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
-                        : diff.id === "HARD"
-                        ? "bg-rose-500/15 text-rose-600 dark:text-rose-400"
-                        : "bg-primary/10 text-primary"
-                      : "text-muted-foreground/80"
-                  }`}
-                >
-                  {diff.count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+        {/* Right: Filters button + Sort dropdown + View Mode */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Filters Button */}
+          <button
+            type="button"
+            onClick={() => setIsFilterSheetOpen(true)}
+            className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
+              activeFilterCount > 0
+                ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
+                : "bg-card hover:bg-muted text-foreground border-border"
+            }`}
+          >
+            <SlidersHorizontal className="size-3.5 shrink-0" />
+            <span>Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="size-4 rounded-full bg-white text-primary text-[9px] font-extrabold flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
 
-      {/* ========================================================================= */}
-      {/* 6. SECONDARY ACTIONS TOOLBAR (FILTER / SORT / VIEW)                       */}
-      {/* Unified control area for secondary actions                                */}
-      {/* ========================================================================= */}
-      <div className="flex items-center justify-between gap-2.5 pt-0.5">
-        {/* Left: Filter Trigger Button */}
-        <button
-          type="button"
-          onClick={() => setIsFilterSheetOpen(true)}
-          className={`inline-flex items-center gap-2 px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
-            activeFilterCount > 0
-              ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
-              : "bg-card hover:bg-muted text-foreground border-border"
-          }`}
-        >
-          <SlidersHorizontal className="size-3.5 shrink-0" />
-          <span>Filters</span>
-          {activeFilterCount > 0 && (
-            <span className="size-4.5 rounded-full bg-white text-primary text-[10px] font-extrabold flex items-center justify-center">
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
-
-        {/* Right: Sort Menu + View Mode Toggle */}
-        <div className="flex items-center gap-2">
           {/* Sort Dropdown Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-2xs"
+                  className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-2xs"
                 />
               }
             >
-              <ArrowUpDown className="size-3.5 text-muted-foreground shrink-0" />
-              <span className="hidden sm:inline text-muted-foreground">Sort:</span>
-              <span className="font-semibold truncate max-w-[120px] sm:max-w-[160px]">
+              <ArrowUpDown className="size-3 text-muted-foreground shrink-0" />
+              <span className="hidden md:inline text-muted-foreground">Sort:</span>
+              <span className="font-semibold truncate max-w-[85px] sm:max-w-[140px]">
                 {currentSortLabel}
               </span>
-              <ChevronDown className="size-3 text-muted-foreground shrink-0 ml-0.5" />
+              <ChevronDown className="size-3 text-muted-foreground shrink-0" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 p-1.5">
               <DropdownMenuLabel className="text-[11px] font-semibold text-muted-foreground uppercase px-2 py-1">
@@ -825,11 +723,11 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           </DropdownMenu>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-1 p-1 bg-muted/60 rounded-xl border border-border/70 shrink-0">
+          <div className="flex items-center gap-0.5 p-0.5 bg-muted/60 rounded-lg sm:rounded-xl border border-border/70 shrink-0">
             <button
               type="button"
               onClick={() => setViewMode("GRID")}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`p-1.5 rounded-md text-xs transition-all cursor-pointer ${
                 viewMode === "GRID"
                   ? "bg-card text-primary font-semibold shadow-2xs"
                   : "text-muted-foreground hover:text-foreground"
@@ -837,12 +735,11 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
               title="Grid View"
             >
               <LayoutGrid className="size-3.5" />
-              <span className="hidden md:inline">Grid</span>
             </button>
             <button
               type="button"
               onClick={() => setViewMode("LIST")}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`p-1.5 rounded-md text-xs transition-all cursor-pointer ${
                 viewMode === "LIST"
                   ? "bg-card text-primary font-semibold shadow-2xs"
                   : "text-muted-foreground hover:text-foreground"
@@ -850,24 +747,23 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
               title="List View"
             >
               <List className="size-3.5" />
-              <span className="hidden md:inline">List</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 9. ACTIVE FILTERS                                                         */}
-      {/* Shown directly above results whenever any filter is applied               */}
+      {/* 4. ACTIVE FILTERS CHIPS                                                   */}
+      {/* Displayed directly above cards when any filter is active                  */}
       {/* ========================================================================= */}
       {(activeFilterCount > 0 || search.trim()) && (
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
           <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider shrink-0 flex items-center gap-1 mr-0.5">
             <span>Active:</span>
           </span>
 
           {search.trim() && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
               <span>"{search}"</span>
               <button
                 type="button"
@@ -880,7 +776,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {difficultyFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
               <span>Difficulty: {difficultyFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -895,7 +791,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           {selectedTopics.map((topic) => (
             <span
               key={topic}
-              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shrink-0"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shrink-0"
             >
               <span>{topic}</span>
               <button
@@ -909,7 +805,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           ))}
 
           {timeframeFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
               <span>Time: {timeframeLabels[timeframeFilter]}</span>
               <button
                 type="button"
@@ -922,7 +818,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {platformFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
               <span>Platform: {getPlatformBadge(platformFilter as CodingPlatformType).label}</span>
               <button
                 type="button"
@@ -935,7 +831,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {statusFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
               <span>Status: {statusFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -948,7 +844,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {sourceFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
               <span>Source: {sourceFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -971,8 +867,8 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       )}
 
       {/* ========================================================================= */}
-      {/* 12. PROBLEM LIST / GRID                                                   */}
-      {/* Single column on mobile, responsive multi-col on desktop                  */}
+      {/* 5. PROBLEM LIST / GRID                                                    */}
+      {/* Clean, uncrowded cards immediately visible on screen                      */}
       {/* ========================================================================= */}
       {sortedProblems.length === 0 ? (
         /* Empty State */
@@ -980,7 +876,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           <div className="mx-auto size-12 rounded-full bg-muted/70 flex items-center justify-center mb-3">
             <Search className="size-6 text-muted-foreground/60" />
           </div>
-          <h3 className="text-base sm:text-lg font-bold text-foreground">No problems match your filters</h3>
+          <h3 className="text-base sm:text-lg font-bold text-foreground">No questions match your filters</h3>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-sm mx-auto">
             Try adjusting your search query, difficulty, timeframe, or topic filters.
           </p>
@@ -1011,16 +907,16 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             return (
               <Card
                 key={p.id}
-                className={`p-4 sm:p-5 rounded-xl flex flex-col justify-between transition-all duration-200 hover:border-primary/50 hover:shadow-sm relative group border ${
+                className={`p-3.5 sm:p-4 rounded-xl flex flex-col justify-between transition-all duration-200 hover:border-primary/50 hover:shadow-xs relative group border ${
                   solved ? "bg-primary/5 border-emerald-500/30" : "bg-card"
                 }`}
               >
                 <div>
-                  {/* Top Bar: Platform Logo + Round / ID + Difficulty */}
-                  <div className="flex items-center justify-between gap-2 mb-2 sm:mb-2.5">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-4 shrink-0" />
-                      <span className="text-[10px] font-mono font-medium text-muted-foreground">
+                  {/* Top Bar: Platform Logo + Round / ID + Recency + Difficulty */}
+                  <div className="flex items-center justify-between gap-1.5 mb-2">
+                    <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                      <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-3.5 sm:size-4 shrink-0" />
+                      <span className="text-[10px] font-mono font-medium text-muted-foreground shrink-0">
                         {p.isCommunity ? (
                           <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary border border-primary/20">
                             Community
@@ -1035,29 +931,29 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                       </span>
 
                       {p.roundType && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/60 truncate max-w-[110px]">
+                        <span className="text-[10px] px-1.5 py-0.2 rounded bg-muted text-muted-foreground border border-border/60 truncate max-w-[95px]">
                           {p.roundType}
                         </span>
                       )}
 
                       {/* Recency Badge */}
                       {p.interviewDate ? (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
+                        <span className="text-[10px] px-1.5 py-0.2 rounded font-semibold bg-primary/10 text-primary border border-primary/20 flex items-center gap-1 shrink-0">
                           <Calendar className="size-2.5" />
                           <span>Asked {p.interviewDate}</span>
                         </span>
                       ) : p.timeframe === "THIRTY_DAYS" ? (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                        <span className="text-[10px] px-1.5 py-0.2 rounded font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1 shrink-0">
                           <Clock className="size-2.5" />
                           <span>Past 30 Days</span>
                         </span>
                       ) : p.timeframe === "THREE_MONTHS" ? (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center gap-1">
+                        <span className="text-[10px] px-1.5 py-0.2 rounded font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center gap-1 shrink-0">
                           <Clock className="size-2.5" />
                           <span>Past 3 Months</span>
                         </span>
                       ) : p.timeframe === "SIX_MONTHS" ? (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 flex items-center gap-1">
+                        <span className="text-[10px] px-1.5 py-0.2 rounded font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 flex items-center gap-1 shrink-0">
                           <Clock className="size-2.5" />
                           <span>Past 6 Months</span>
                         </span>
@@ -1078,24 +974,24 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                     </span>
                   </div>
 
-                  {/* Problem Title (with LeetCode number if available) */}
+                  {/* Problem Title: Clean title without repeating LC number */}
                   <h3
                     className={`font-bold text-[13px] sm:text-sm leading-snug text-foreground mb-2 line-clamp-2 ${
                       solved ? "line-through text-muted-foreground" : ""
                     }`}
                   >
-                    {p.leetcodeNumber ? `${p.leetcodeNumber}. ${p.title}` : p.title}
+                    {p.title}
                   </h3>
 
                   {/* Optional Notes for Community Questions */}
                   {p.notes && (
-                    <p className="text-[11px] text-muted-foreground bg-muted/30 p-2 rounded-lg border border-border/50 mb-2.5 line-clamp-2 italic">
+                    <p className="text-[11px] text-muted-foreground bg-muted/30 p-2 rounded-lg border border-border/50 mb-2 line-clamp-2 italic">
                       &ldquo;{p.notes}&rdquo;
                     </p>
                   )}
 
                   {/* Topics Tags Pills (WITHOUT # symbol) */}
-                  <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-3">
+                  <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-2.5">
                     {p.topics.map((t: string, i: number) => (
                       <span
                         key={i}
@@ -1110,7 +1006,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                 </div>
 
                 {/* Footer Action & Tagged Companies */}
-                <div className="pt-2 sm:pt-2.5 border-t space-y-2 mt-auto">
+                <div className="pt-2 border-t space-y-1.5 mt-auto">
                   {displayCompanies.length > 0 && (
                     <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                       <span className="text-[10px] font-medium text-muted-foreground">Asked by:</span>
@@ -1120,10 +1016,10 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                             <CompanyLogo
                               name={c.name}
                               showTooltip
-                              className="size-5 sm:size-5.5 text-[9px] sm:text-xs rounded-md border border-border/60 cursor-pointer hover:scale-110 transition-transform"
+                              className="size-5 text-[9px] rounded-md border border-border/60 cursor-pointer hover:scale-110 transition-transform"
                             />
                             {p.isCommunity && idx === 0 && (
-                              <div className="flex items-center gap-1.5 min-w-0">
+                              <div className="flex items-center gap-1 min-w-0">
                                 <span className="text-[11px] font-semibold text-foreground/90 truncate">
                                   {c.name}
                                 </span>
@@ -1139,13 +1035,13 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                   )}
 
                   {/* Platform Link & Upvote Action */}
-                  <div className="flex items-center justify-between pt-1 gap-2">
+                  <div className="flex items-center justify-between pt-0.5 gap-2">
                     {p.isCommunity ? (
                       <button
                         type="button"
                         onClick={() => handleUpvote(p.id)}
                         disabled={isUpvoted}
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium border border-border/80 bg-background text-muted-foreground transition-all ${
+                        className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[11px] font-medium border border-border/80 bg-background text-muted-foreground transition-all ${
                           isUpvoted
                             ? "opacity-80 cursor-default"
                             : "hover:bg-muted hover:text-foreground cursor-pointer active:scale-95 shadow-2xs"
@@ -1167,11 +1063,11 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                         href={p.leetcodeUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-primary hover:underline group-hover:translate-x-0.5 transition-transform shrink-0"
+                        className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-primary hover:underline group-hover:translate-x-0.5 transition-transform shrink-0"
                       >
-                        <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-3.5 sm:size-4 shrink-0" />
+                        <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-3.5 shrink-0" />
                         <span>Solve on {platformInfo.label}</span>
-                        <ExternalLink className="size-2.5 sm:size-3" />
+                        <ExternalLink className="size-2.5" />
                       </a>
                     ) : (
                       <span className="text-[11px] text-muted-foreground italic">In-person Q</span>
@@ -1189,12 +1085,12 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             <table className="w-full text-left text-xs min-w-[650px] sm:min-w-[750px]">
               <thead className="bg-muted/50 text-muted-foreground uppercase font-semibold text-[10px] tracking-wider border-b">
                 <tr>
-                  <th className="py-3 px-3 sm:px-4 min-w-[220px] sm:min-w-[280px]">Problem Title</th>
-                  <th className="py-3 px-3 sm:px-4">Platform</th>
-                  <th className="py-3 px-3 sm:px-4">Difficulty</th>
-                  <th className="py-3 px-3 sm:px-4">Topics</th>
-                  <th className="py-3 px-3 sm:px-4">Companies</th>
-                  <th className="py-3 px-3 sm:px-4 text-right">Action</th>
+                  <th className="py-2.5 px-3 sm:px-4 min-w-[220px] sm:min-w-[280px]">Problem Title</th>
+                  <th className="py-2.5 px-3 sm:px-4">Platform</th>
+                  <th className="py-2.5 px-3 sm:px-4">Difficulty</th>
+                  <th className="py-2.5 px-3 sm:px-4">Topics</th>
+                  <th className="py-2.5 px-3 sm:px-4">Companies</th>
+                  <th className="py-2.5 px-3 sm:px-4 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
@@ -1212,7 +1108,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
 
                   return (
                     <tr key={p.id} className="hover:bg-muted/30 transition-colors">
-                      <td className="py-3 px-3 sm:px-4 font-medium text-foreground min-w-[220px] sm:min-w-[280px]">
+                      <td className="py-2.5 px-3 sm:px-4 font-medium text-foreground min-w-[220px] sm:min-w-[280px]">
                         <div className="flex items-start sm:items-center gap-2.5 min-w-0">
                           <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-4 shrink-0 mt-0.5 sm:mt-0" />
                           <div className="min-w-0 flex flex-col gap-0.5">
@@ -1251,13 +1147,13 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                           </div>
                         </div>
                       </td>
-                      <td className="py-3 px-3 sm:px-4">
+                      <td className="py-2.5 px-3 sm:px-4">
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold border ${platformInfo.badgeClass}`}>
                           <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-3" />
                           <span>{platformInfo.label}</span>
                         </span>
                       </td>
-                      <td className="py-3 px-3 sm:px-4">
+                      <td className="py-2.5 px-3 sm:px-4">
                         <span
                           className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase ${
                             p.difficulty === "EASY"
@@ -1270,7 +1166,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                           {p.difficulty}
                         </span>
                       </td>
-                      <td className="py-3 px-3 sm:px-4">
+                      <td className="py-2.5 px-3 sm:px-4">
                         <div className="flex flex-wrap gap-1">
                           {p.topics.slice(0, 3).map((t: string, i: number) => (
                             <span
@@ -1284,7 +1180,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                           ))}
                         </div>
                       </td>
-                      <td className="py-3 px-3 sm:px-4">
+                      <td className="py-2.5 px-3 sm:px-4">
                         <div className="flex items-center gap-1">
                           {displayCompanies.slice(0, 3).map((c, idx) => (
                             <CompanyLogo
@@ -1296,7 +1192,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                           ))}
                         </div>
                       </td>
-                      <td className="py-3 px-3 sm:px-4 text-right">
+                      <td className="py-2.5 px-3 sm:px-4 text-right">
                         <div className="inline-flex items-center gap-2 justify-end">
                           {p.isCommunity && (
                             <button
@@ -1344,7 +1240,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       {/* PAGINATION                                                                */}
       {/* ========================================================================= */}
       {totalPages > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t text-xs">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t text-xs">
           <span className="text-muted-foreground text-center sm:text-left">
             Showing <span className="font-semibold text-foreground">{paginatedProblems.length}</span> of{" "}
             <span className="font-semibold text-foreground">{sortedProblems.length}</span> questions
@@ -1377,7 +1273,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       )}
 
       {/* ========================================================================= */}
-      {/* 7. & 8. ADVANCED FILTER SHEET (DRAWER ON DESKTOP, BOTTOM SHEET ON MOBILE) */}
+      {/* 6. ADVANCED FILTER SHEET (DRAWER ON DESKTOP, NATIVE BOTTOM SHEET ON MOBILE) */}
       {/* ========================================================================= */}
       <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
         <SheetContent
@@ -1389,7 +1285,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           }
         >
           {/* Header */}
-          <SheetHeader className="px-5 py-4 border-b border-border/80 bg-muted/20 shrink-0">
+          <SheetHeader className="px-5 py-3.5 border-b border-border/80 bg-muted/20 shrink-0">
             <div className="flex items-center justify-between pr-6">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="size-4 text-primary" />
@@ -1407,37 +1303,38 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           </SheetHeader>
 
           {/* Scrollable Body */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-5 no-scrollbar text-xs">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 sm:space-y-5 no-scrollbar text-xs">
             {/* Filter Section 1: Difficulty */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="font-semibold text-foreground text-xs uppercase tracking-wider block">
                 Difficulty
               </label>
               <div className="grid grid-cols-4 gap-1.5">
                 {[
-                  { id: "ALL", label: "All" },
-                  { id: "EASY", label: "Easy" },
-                  { id: "MEDIUM", label: "Medium" },
-                  { id: "HARD", label: "Hard" },
+                  { id: "ALL", label: "All", count: problems.length },
+                  { id: "EASY", label: "Easy", count: easyCount },
+                  { id: "MEDIUM", label: "Medium", count: mediumCount },
+                  { id: "HARD", label: "Hard", count: hardCount },
                 ].map((diff) => (
                   <button
                     key={diff.id}
                     type="button"
                     onClick={() => setDifficultyFilter(diff.id)}
-                    className={`py-2 rounded-lg text-xs font-semibold border transition-all cursor-pointer text-center ${
+                    className={`py-2 px-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer text-center ${
                       difficultyFilter === diff.id
                         ? "bg-primary text-primary-foreground border-primary shadow-2xs"
                         : "bg-card hover:bg-muted text-foreground border-border"
                     }`}
                   >
-                    {diff.label}
+                    <div>{diff.label}</div>
+                    <div className="text-[10px] opacity-80 font-mono font-normal">({diff.count})</div>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Filter Section 2: Time Range */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="font-semibold text-foreground text-xs uppercase tracking-wider block">
                 Time Range
               </label>
@@ -1467,7 +1364,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             </div>
 
             {/* Filter Section 3: Question Source */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="font-semibold text-foreground text-xs uppercase tracking-wider block">
                 Question Source
               </label>
@@ -1495,7 +1392,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             </div>
 
             {/* Filter Section 4: Solved Status */}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label className="font-semibold text-foreground text-xs uppercase tracking-wider block">
                 Solved Status
               </label>
@@ -1524,7 +1421,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
 
             {/* Filter Section 5: Platform */}
             {availablePlatforms.length > 1 && (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <label className="font-semibold text-foreground text-xs uppercase tracking-wider block">
                   Platform
                 </label>
@@ -1565,7 +1462,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {/* Filter Section 6: Topics (Searchable multi-select) */}
-            <div className="space-y-2 pt-1 border-t border-border/70">
+            <div className="space-y-1.5 pt-1 border-t border-border/70">
               <div className="flex items-center justify-between">
                 <label className="font-semibold text-foreground text-xs uppercase tracking-wider">
                   Topics ({allTopicsWithCounts.length})
@@ -1588,7 +1485,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                   type="text"
                   value={filterTopicSearch}
                   onChange={(e) => setFilterTopicSearch(e.target.value)}
-                  placeholder="Filter topic tags..."
+                  placeholder="Search topic tags..."
                   className="w-full pl-8 pr-7 py-1.5 rounded-lg border border-border bg-background text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 {filterTopicSearch && (
