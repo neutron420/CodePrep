@@ -44,6 +44,7 @@ import { useSolvedProblems } from "@/lib/hooks/use-solved-problems";
 import { useBookmarks } from "@/lib/hooks/use-bookmarks";
 import { useTargetCompanies } from "@/lib/hooks/use-target-companies";
 import { Card } from "@/components/ui/card";
+import { ProblemCardSkeleton } from "@/components/problem-card-skeleton";
 import { ProblemItem, CodingPlatformType } from "@/types/problem";
 import { CompanyLogo } from "@/components/company-logo";
 import { CompanyTooltip } from "@/components/company-tooltip";
@@ -243,6 +244,34 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
     return new Set();
   });
   const pageSize = 12;
+
+  // Card-only Skeleton & Switching Transition State
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isSwitching, setIsSwitching] = useState(false);
+  const prevCompanySlug = useRef(companySlug);
+
+  useEffect(() => {
+    // Initial mount loading state (350ms)
+    const timer = setTimeout(() => setIsInitialLoading(false), 350);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleSwitchStart = () => {
+      setIsSwitching(true);
+    };
+    window.addEventListener("company-switch-start", handleSwitchStart);
+    return () => window.removeEventListener("company-switch-start", handleSwitchStart);
+  }, []);
+
+  useEffect(() => {
+    if (prevCompanySlug.current !== companySlug) {
+      prevCompanySlug.current = companySlug;
+      // When new company problems arrive, smoothly conclude switching skeleton
+      const timer = setTimeout(() => setIsSwitching(false), 250);
+      return () => clearTimeout(timer);
+    }
+  }, [companySlug, problems]);
 
   const { isSolved } = useSolvedProblems();
   const { isBookmarked, toggleBookmark } = useBookmarks();
@@ -936,6 +965,13 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             <RotateCcw className="size-3.5" />
             <span>Clear All Filters</span>
           </button>
+        </div>
+      ) : isInitialLoading || isSwitching ? (
+        /* Box Format Card Skeleton Grid - Cards Only (Sidebar & Navbar remain unchanged) */
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <ProblemCardSkeleton key={i} />
+          ))}
         </div>
       ) : viewMode === "GRID" ? (
         /* Box Format Card Grid */

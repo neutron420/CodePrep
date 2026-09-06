@@ -46,6 +46,9 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
 
   const handleSelect = (slug: string) => {
     setOpen(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("company-switch-start", { detail: slug }));
+    }
     router.push(`/dashboard?company=${slug}`);
   };
 

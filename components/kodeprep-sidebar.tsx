@@ -166,6 +166,9 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
   }, [categorizedCompanies, activeCompanySlug]);
 
   const selectCompany = (slug: string) => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("company-switch-start", { detail: slug }));
+    }
     router.push(`/dashboard?company=${slug}`);
     if (isMobile) {
       setOpenMobile(false);

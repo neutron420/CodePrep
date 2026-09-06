@@ -65,7 +65,12 @@ export function TargetCompaniesBar({
             >
               <button
                 type="button"
-                onClick={() => router.push(`/dashboard?company=${company.slug}`)}
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new CustomEvent("company-switch-start", { detail: company.slug }));
+                  }
+                  router.push(`/dashboard?company=${company.slug}`);
+                }}
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs transition-all cursor-pointer shrink-0 border ${
                   isActive
                     ? "bg-primary text-primary-foreground font-semibold border-primary shadow-xs"
