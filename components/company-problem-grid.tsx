@@ -741,116 +741,128 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       </div>
 
       {/* ========================================================================= */}
-      {/* 5. ACTIVE FILTERS CHIPS                                                   */}
-      {/* Displayed directly above cards when any filter is active                  */}
+      {/* 5. ACTIVE FILTERS (2 FILTERS PER ROW ON MOBILE, NEVER CUT OFF)            */}
       {/* ========================================================================= */}
       {(activeFilterCount > 0 || search.trim()) && (
-        <div className="flex flex-wrap items-center gap-1.5 py-1">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider shrink-0 flex items-center gap-1 mr-0.5">
-            <span>Active:</span>
-          </span>
-
-          {search.trim() && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0 max-w-[85vw] sm:max-w-none">
-              <span className="truncate">"{search}"</span>
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="hover:text-rose-500 cursor-pointer ml-0.5 shrink-0"
-              >
-                <X className="size-3" />
-              </button>
+        <div className="space-y-1.5 pt-1 pb-0.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+              <span>Active Filters</span>
+              <span className="size-4 rounded-full bg-primary/10 text-primary text-[9px] font-extrabold flex items-center justify-center">
+                {activeFilterCount + (search.trim() ? 1 : 0)}
+              </span>
             </span>
-          )}
-
-          {difficultyFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0 capitalize">
-              <span>Difficulty: {difficultyFilter.toLowerCase()}</span>
-              <button
-                type="button"
-                onClick={() => setDifficultyFilter("ALL")}
-                className="hover:text-rose-500 cursor-pointer ml-0.5"
-              >
-                <X className="size-3" />
-              </button>
-            </span>
-          )}
-
-          {selectedTopics.map((topic) => (
-            <span
-              key={topic}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shrink-0"
+            <button
+              type="button"
+              onClick={resetAllFilters}
+              className="text-[11px] text-primary hover:underline font-semibold cursor-pointer"
             >
-              <span>{topic}</span>
-              <button
-                type="button"
-                onClick={() => toggleTopic(topic)}
-                className="hover:text-rose-500 cursor-pointer ml-0.5"
-              >
-                <X className="size-3" />
-              </button>
-            </span>
-          ))}
+              Clear all
+            </button>
+          </div>
 
-          {timeframeFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0">
-              <span>Time: {timeframeLabels[timeframeFilter]}</span>
-              <button
-                type="button"
-                onClick={() => setTimeframeFilter("ALL")}
-                className="hover:text-rose-500 cursor-pointer ml-0.5"
-              >
-                <X className="size-3" />
-              </button>
-            </span>
-          )}
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5">
+            {search.trim() && (
+              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+                <span className="truncate">"{search}"</span>
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="hover:text-rose-500 cursor-pointer shrink-0 ml-1"
+                  aria-label="Clear search"
+                >
+                  <X className="size-3" />
+                </button>
+              </span>
+            )}
 
-          {platformFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0">
-              <span>Platform: {getPlatformBadge(platformFilter as CodingPlatformType).label}</span>
-              <button
-                type="button"
-                onClick={() => setPlatformFilter("ALL")}
-                className="hover:text-rose-500 cursor-pointer ml-0.5"
-              >
-                <X className="size-3" />
-              </button>
-            </span>
-          )}
+            {difficultyFilter !== "ALL" && (
+              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+                <span className="truncate">Difficulty: {difficultyFilter.toLowerCase()}</span>
+                <button
+                  type="button"
+                  onClick={() => setDifficultyFilter("ALL")}
+                  className="hover:text-rose-500 cursor-pointer shrink-0 ml-1"
+                  aria-label="Remove difficulty filter"
+                >
+                  <X className="size-3" />
+                </button>
+              </span>
+            )}
 
-          {statusFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0 capitalize">
-              <span>Status: {statusFilter.toLowerCase()}</span>
-              <button
-                type="button"
-                onClick={() => setStatusFilter("ALL")}
-                className="hover:text-rose-500 cursor-pointer ml-0.5"
+            {selectedTopics.map((topic) => (
+              <span
+                key={topic}
+                className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shadow-2xs"
               >
-                <X className="size-3" />
-              </button>
-            </span>
-          )}
+                <span className="truncate">{topic}</span>
+                <button
+                  type="button"
+                  onClick={() => toggleTopic(topic)}
+                  className="hover:text-rose-500 cursor-pointer shrink-0 ml-1"
+                  aria-label={`Remove topic ${topic}`}
+                >
+                  <X className="size-3" />
+                </button>
+              </span>
+            ))}
 
-          {sourceFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-muted/80 text-foreground border border-border shrink-0 capitalize">
-              <span>Source: {sourceFilter.toLowerCase()}</span>
-              <button
-                type="button"
-                onClick={() => setSourceFilter("ALL")}
-                className="hover:text-rose-500 cursor-pointer ml-0.5"
-              >
-                <X className="size-3" />
-              </button>
-            </span>
-          )}
+            {timeframeFilter !== "ALL" && (
+              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+                <span className="truncate">Time: {timeframeLabels[timeframeFilter]}</span>
+                <button
+                  type="button"
+                  onClick={() => setTimeframeFilter("ALL")}
+                  className="hover:text-rose-500 cursor-pointer shrink-0 ml-1"
+                  aria-label="Remove timeframe filter"
+                >
+                  <X className="size-3" />
+                </button>
+              </span>
+            )}
 
-          <button
-            type="button"
-            onClick={resetAllFilters}
-            className="text-[11px] text-primary hover:underline font-semibold whitespace-nowrap ml-1 px-1.5 py-0.5 cursor-pointer shrink-0"
-          >
-            Clear all
-          </button>
+            {platformFilter !== "ALL" && (
+              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+                <span className="truncate">Platform: {getPlatformBadge(platformFilter as CodingPlatformType).label}</span>
+                <button
+                  type="button"
+                  onClick={() => setPlatformFilter("ALL")}
+                  className="hover:text-rose-500 cursor-pointer shrink-0 ml-1"
+                  aria-label="Remove platform filter"
+                >
+                  <X className="size-3" />
+                </button>
+              </span>
+            )}
+
+            {statusFilter !== "ALL" && (
+              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+                <span className="truncate">Status: {statusFilter.toLowerCase()}</span>
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter("ALL")}
+                  className="hover:text-rose-500 cursor-pointer shrink-0 ml-1"
+                  aria-label="Remove status filter"
+                >
+                  <X className="size-3" />
+                </button>
+              </span>
+            )}
+
+            {sourceFilter !== "ALL" && (
+              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+                <span className="truncate">Source: {sourceFilter.toLowerCase()}</span>
+                <button
+                  type="button"
+                  onClick={() => setSourceFilter("ALL")}
+                  className="hover:text-rose-500 cursor-pointer shrink-0 ml-1"
+                  aria-label="Remove source filter"
+                >
+                  <X className="size-3" />
+                </button>
+              </span>
+            )}
+          </div>
         </div>
       )}
 
