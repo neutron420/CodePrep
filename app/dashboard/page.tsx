@@ -138,6 +138,36 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     console.warn("Failed to fetch problems for company in dashboard:", err);
   }
 
+  // Find other companies that also had the same community questions reported
+  const titleToOtherCompaniesMap = new Map<string, Array<{ name: string; slug: string }>>();
+  if (communityProblemsRaw.length > 0) {
+    try {
+      const titles = communityProblemsRaw.map((c) => c.title.toLowerCase().trim());
+      const otherMatches = await withDbRetry(() =>
+        prisma.communityProblem.findMany({
+          where: {
+            title: { in: titles, mode: "insensitive" },
+          },
+          select: {
+            title: true,
+            company: { select: { name: true, slug: true } },
+          },
+        })
+      );
+      for (const m of otherMatches) {
+        if (!m.company) continue;
+        const key = m.title.toLowerCase().trim();
+        const list = titleToOtherCompaniesMap.get(key) || [];
+        if (!list.some((existing) => existing.slug === m.company.slug)) {
+          list.push(m.company);
+        }
+        titleToOtherCompaniesMap.set(key, list);
+      }
+    } catch (e) {
+      console.warn("Failed to fetch cross-company community matches:", e);
+    }
+  }
+
   const standardProblems: ProblemItem[] = rawProblems.map((rp) => ({
     id: rp.problem.id,
     title: rp.problem.title,
@@ -153,26 +183,33 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     isCommunity: false,
   }));
 
-  const communityProblems: ProblemItem[] = communityProblemsRaw.map((cp) => ({
-    id: cp.id + 1_000_000, // Distinct key range to prevent collision with standard problem IDs
-    title: cp.title,
-    slug: `community-${cp.id}`,
-    difficulty: cp.difficulty,
-    leetcodeUrl: cp.problemUrl || "#",
-    topics: Array.isArray(cp.topics) ? cp.topics : [],
-    companiesAsking: [
-      {
-        name: cp.company?.name || activeCompany.name,
-        slug: cp.company?.slug || activeCompany.slug,
-      },
-    ],
-    platform: cp.platform,
-    isCommunity: true,
-    roundType: cp.roundType,
-    notes: cp.notes,
-    upvotes: cp.upvotes,
-    submittedBy: cp.user || null,
-  }));
+  const communityProblems: ProblemItem[] = communityProblemsRaw.map((cp) => {
+    const key = cp.title.toLowerCase().trim();
+    const otherCompanies = titleToOtherCompaniesMap.get(key) || [];
+    const activeSlug = cp.company?.slug || activeCompany.slug;
+    const activeName = cp.company?.name || activeCompany.name;
+
+    const companiesAskingList = [
+      { name: activeName, slug: activeSlug },
+      ...otherCompanies.filter((c) => c.slug !== activeSlug),
+    ];
+
+    return {
+      id: cp.id + 1_000_000, // Distinct key range to prevent collision with standard problem IDs
+      title: cp.title,
+      slug: `community-${cp.id}`,
+      difficulty: cp.difficulty,
+      leetcodeUrl: cp.problemUrl || "#",
+      topics: Array.isArray(cp.topics) ? cp.topics : [],
+      companiesAsking: companiesAskingList,
+      platform: cp.platform,
+      isCommunity: true,
+      roundType: cp.roundType,
+      notes: cp.notes,
+      upvotes: cp.upvotes,
+      submittedBy: cp.user || null,
+    };
+  });
 
   // Combined problems: Community-reported interview questions first, then standard list
   const problems: ProblemItem[] = [...communityProblems, ...standardProblems];

@@ -648,7 +648,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                                   showTooltip
                                   className="size-5 sm:size-6 text-[9px] sm:text-xs rounded-md border border-border/60 cursor-pointer hover:scale-110 transition-transform"
                                 />
-                                {p.isCommunity && (
+                                {p.isCommunity && idx === 0 && (
                                   <div className="flex items-center gap-1.5 min-w-0">
                                     <span className="text-[11px] font-semibold text-foreground/90 truncate">
                                       {c.name}
