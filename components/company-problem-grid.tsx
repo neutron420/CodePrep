@@ -607,10 +607,10 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. SEARCH — PROMINENT, UNCLIPPED & FAST                                   */}
+      {/* 2. SEARCH — SLIM, COMPACT & MOBILE OPTIMIZED                             */}
       {/* ========================================================================= */}
       <div className="relative w-full">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 sm:size-4 text-muted-foreground pointer-events-none" />
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/80 pointer-events-none" />
         <input
           ref={searchInputRef}
           type="text"
@@ -620,10 +620,10 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             setCurrentPage(1);
           }}
           placeholder="Search problems, topics, number..."
-          className="w-full pl-8 sm:pl-9 pr-14 sm:pr-18 py-2 sm:py-2.5 rounded-md border border-border bg-card text-foreground text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-muted-foreground shadow-2xs"
+          className="w-full h-8 sm:h-8.5 pl-8 pr-10 sm:pr-12 rounded-md border border-border/80 dark:border-zinc-800/90 bg-card dark:bg-zinc-950/80 text-foreground text-xs sm:text-[13px] focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-muted-foreground/60 shadow-2xs"
         />
 
-        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
           {search ? (
             <button
               type="button"
@@ -631,13 +631,13 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                 setSearch("");
                 setCurrentPage(1);
               }}
-              className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+              className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
               title="Clear search"
             >
-              <X className="size-3.5" />
+              <X className="size-3" />
             </button>
           ) : (
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground bg-muted/80 border border-border rounded">
+            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.2 text-[9.5px] font-mono text-muted-foreground/70 bg-muted/70 border border-border/80 rounded">
               <span>/</span>
             </kbd>
           )}
