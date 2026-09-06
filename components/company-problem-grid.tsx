@@ -519,7 +519,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       {/* 1. COMPACT & CLEAN COMPANY HEADER                                         */}
       {/* Sleek mobile-first design, all information preserved in minimal height    */}
       {/* ========================================================================= */}
-      <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-card border shadow-xs relative overflow-hidden">
+      <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-card border shadow-xs relative overflow-hidden">
         <div className="flex items-start justify-between gap-2.5 sm:gap-4">
           {/* Identity: Logo + Details */}
           <div className="flex items-start gap-2.5 sm:gap-3.5 min-w-0 flex-1">
@@ -620,7 +620,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             setCurrentPage(1);
           }}
           placeholder="Search problems, topics, number..."
-          className="w-full pl-8 sm:pl-9 pr-14 sm:pr-18 py-2 sm:py-2.5 rounded-xl border border-border bg-card text-foreground text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-muted-foreground shadow-2xs"
+          className="w-full pl-8 sm:pl-9 pr-14 sm:pr-18 py-2 sm:py-2.5 rounded-md border border-border bg-card text-foreground text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-muted-foreground shadow-2xs"
         />
 
         <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -652,7 +652,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         <button
           type="button"
           onClick={() => setIsFilterSheetOpen(true)}
-          className={`flex-1 sm:flex-none sm:w-auto sm:px-4 sm:h-9 min-w-0 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
+          className={`flex-1 sm:flex-none sm:w-auto sm:px-4 sm:h-9 min-w-0 flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
             activeFilterCount > 0
               ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
               : "bg-card hover:bg-muted text-foreground border-border"
@@ -676,7 +676,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
               setCurrentPage(1);
             }}
             aria-label="Sort questions"
-            className="w-full h-full appearance-none pl-6 pr-5 py-2 sm:py-0 rounded-xl text-[11.5px] sm:text-xs font-semibold border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-primary/40 truncate text-left"
+            className="w-full h-full appearance-none pl-6 pr-5 py-2 sm:py-0 rounded-md text-[11.5px] sm:text-xs font-semibold border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-primary/40 truncate text-left"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.id} value={opt.id} className="bg-popover text-popover-foreground py-1 text-xs">
@@ -689,7 +689,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         </div>
 
         {/* View Mode Toggle */}
-        <div className="flex items-center gap-0.5 p-0.5 bg-muted/60 rounded-xl border border-border/70 shrink-0 sm:ml-auto">
+        <div className="flex items-center gap-0.5 p-0.5 bg-muted/60 rounded-md border border-border/70 shrink-0 sm:ml-auto">
           <button
             type="button"
             onClick={() => setViewMode("GRID")}
@@ -763,7 +763,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
 
           <div className="grid grid-cols-2 max-w-2xl gap-1.5 sm:gap-2">
             {search.trim() && (
-              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
                 <span className="truncate">"{search}"</span>
                 <button
                   type="button"
@@ -777,7 +777,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {difficultyFilter !== "ALL" && (
-              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
                 <span className="truncate">Difficulty: {difficultyFilter.toLowerCase()}</span>
                 <button
                   type="button"
@@ -793,7 +793,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             {selectedTopics.map((topic) => (
               <span
                 key={topic}
-                className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold bg-primary/10 text-primary border border-primary/20 shadow-2xs"
+                className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-semibold bg-primary/10 text-primary border border-primary/20 shadow-2xs"
               >
                 <span className="truncate">{topic}</span>
                 <button
@@ -808,7 +808,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             ))}
 
             {timeframeFilter !== "ALL" && (
-              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
                 <span className="truncate">Time: {timeframeLabels[timeframeFilter]}</span>
                 <button
                   type="button"
@@ -822,7 +822,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {platformFilter !== "ALL" && (
-              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
                 <span className="truncate">Platform: {getPlatformBadge(platformFilter as CodingPlatformType).label}</span>
                 <button
                   type="button"
@@ -836,7 +836,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {statusFilter !== "ALL" && (
-              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
                 <span className="truncate">Status: {statusFilter.toLowerCase()}</span>
                 <button
                   type="button"
@@ -850,7 +850,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {sourceFilter !== "ALL" && (
-              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
                 <span className="truncate">Source: {sourceFilter.toLowerCase()}</span>
                 <button
                   type="button"
@@ -872,7 +872,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       {/* ========================================================================= */}
       {sortedProblems.length === 0 ? (
         /* Empty State */
-        <div className="text-center py-12 sm:py-16 border rounded-2xl bg-card p-6">
+        <div className="text-center py-12 sm:py-16 border rounded-lg bg-card p-6">
           <div className="mx-auto size-12 rounded-full bg-muted/70 flex items-center justify-center mb-3">
             <Search className="size-6 text-muted-foreground/60" />
           </div>
@@ -907,7 +907,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             return (
               <Card
                 key={p.id}
-                className={`p-3.5 sm:p-4 rounded-xl flex flex-col justify-between transition-all duration-200 hover:border-primary/50 hover:shadow-xs relative group border ${
+                className={`p-3.5 sm:p-4 rounded-lg flex flex-col justify-between transition-all duration-200 hover:border-primary/50 hover:shadow-xs relative group border ${
                   solved ? "bg-primary/5 border-emerald-500/30" : "bg-card"
                 }`}
               >
@@ -1106,7 +1106,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
         </div>
       ) : (
         /* List View (Table on Desktop, Adaptive on Mobile) */
-        <div className="rounded-xl border bg-card overflow-hidden">
+        <div className="rounded-lg border bg-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs min-w-[650px] sm:min-w-[750px]">
               <thead className="bg-muted/50 text-muted-foreground uppercase font-semibold text-[10px] tracking-wider border-b">

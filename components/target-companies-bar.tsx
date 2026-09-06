@@ -39,7 +39,7 @@ export function TargetCompaniesBar({
   if (targetCompanies.length === 0) return null;
 
   return (
-    <div className="w-full flex items-center gap-2 p-2 sm:p-2.5 rounded-xl bg-card border shadow-2xs overflow-x-auto no-scrollbar">
+    <div className="w-full flex items-center gap-2 p-2 sm:p-2.5 rounded-lg bg-card border shadow-2xs overflow-x-auto no-scrollbar">
       {/* Label Badge */}
       <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0 text-xs font-bold">
         <Star className="size-3.5 fill-amber-400 text-amber-500" />

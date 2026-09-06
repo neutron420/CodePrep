@@ -284,7 +284,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
             {/* GitHub Star Repository Button */}
             <a
-              href="https://github.com/neutron420/CodePrep"
+              href="https://github.com/neutron420/CodeCraft"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 h-8 px-2.5 sm:px-3 rounded-lg border border-border bg-card/70 hover:bg-muted text-foreground text-xs font-semibold transition-all shadow-2xs hover:border-border/80 group cursor-pointer"

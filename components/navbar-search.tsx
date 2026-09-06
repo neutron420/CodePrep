@@ -73,7 +73,7 @@ export function NavbarSearch({ companies, currentCompanySlug }: NavbarSearchProp
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Search companies"
-        className="flex items-center gap-2 rounded-lg border border-border/80 bg-muted/40 hover:bg-muted/70 text-muted-foreground text-xs transition-all cursor-pointer p-2 sm:px-3 sm:py-1.5 sm:w-[220px] md:w-[260px] active:scale-95"
+        className="flex items-center gap-2 rounded-md border border-border/80 bg-muted/40 hover:bg-muted/70 text-muted-foreground text-xs transition-all cursor-pointer p-2 sm:px-3 sm:py-1.5 sm:w-[220px] md:w-[260px] active:scale-95"
       >
         <Search className="size-4 shrink-0 text-muted-foreground" />
         <span className="hidden sm:inline truncate">Search companies...</span>
