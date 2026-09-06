@@ -761,9 +761,9 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             </button>
           </div>
 
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5">
+          <div className="grid grid-cols-2 max-w-2xl gap-1.5 sm:gap-2">
             {search.trim() && (
-              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
                 <span className="truncate">"{search}"</span>
                 <button
                   type="button"
@@ -777,7 +777,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {difficultyFilter !== "ALL" && (
-              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
                 <span className="truncate">Difficulty: {difficultyFilter.toLowerCase()}</span>
                 <button
                   type="button"
@@ -793,7 +793,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             {selectedTopics.map((topic) => (
               <span
                 key={topic}
-                className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shadow-2xs"
+                className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold bg-primary/10 text-primary border border-primary/20 shadow-2xs"
               >
                 <span className="truncate">{topic}</span>
                 <button
@@ -808,7 +808,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             ))}
 
             {timeframeFilter !== "ALL" && (
-              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
                 <span className="truncate">Time: {timeframeLabels[timeframeFilter]}</span>
                 <button
                   type="button"
@@ -822,7 +822,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {platformFilter !== "ALL" && (
-              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs">
                 <span className="truncate">Platform: {getPlatformBadge(platformFilter as CodingPlatformType).label}</span>
                 <button
                   type="button"
@@ -836,7 +836,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {statusFilter !== "ALL" && (
-              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
                 <span className="truncate">Status: {statusFilter.toLowerCase()}</span>
                 <button
                   type="button"
@@ -850,7 +850,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             )}
 
             {sourceFilter !== "ALL" && (
-              <span className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
+              <span className="w-full min-w-0 inline-flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-medium bg-muted/80 text-foreground border border-border/80 shadow-2xs capitalize">
                 <span className="truncate">Source: {sourceFilter.toLowerCase()}</span>
                 <button
                   type="button"
