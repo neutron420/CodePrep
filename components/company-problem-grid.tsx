@@ -6,7 +6,6 @@ import {
   Search,
   LayoutGrid,
   List,
-  Tag,
   Globe,
   MapPin,
   Calendar,
@@ -34,7 +33,6 @@ import {
   Clock,
   SlidersHorizontal,
   ArrowUpDown,
-  Check,
   X,
   RotateCcw,
   ChevronDown,
@@ -58,14 +56,6 @@ import {
   SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
 function getPlatformBadge(platform?: CodingPlatformType) {
@@ -376,8 +366,8 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       // 1. Search (Title, LC Number, Slug, Topics, Platform)
       if (search.trim()) {
         const q = search.toLowerCase().trim();
-        const matchTitle = p.title.toLowerCase().includes(q);
-        const matchSlug = p.slug.toLowerCase().includes(q);
+        const matchTitle = (p.title || "").toLowerCase().includes(q);
+        const matchSlug = (p.slug || "").toLowerCase().includes(q);
         const matchNumber = p.leetcodeNumber != null && String(p.leetcodeNumber).includes(q);
         const matchPlatform = p.platform?.toLowerCase().includes(q);
         const matchTopic = p.topics?.some((t) => t.toLowerCase().includes(q));
@@ -447,7 +437,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
     isSolved,
   ]);
 
-  // Sort problems
+  // Sort problems safely
   const sortedProblems = useMemo(() => {
     const list = [...filteredProblems];
     switch (sortBy) {
@@ -456,14 +446,22 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       case "number-desc":
         return list.sort((a, b) => (b.leetcodeNumber ?? 0) - (a.leetcodeNumber ?? 0));
       case "title-asc":
-        return list.sort((a, b) => a.title.localeCompare(b.title));
+        return list.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
       case "diff-asc": {
-        const rank = { EASY: 1, MEDIUM: 2, HARD: 3 };
-        return list.sort((a, b) => rank[a.difficulty] - rank[b.difficulty]);
+        const rank: Record<string, number> = { EASY: 1, MEDIUM: 2, HARD: 3 };
+        return list.sort((a, b) => {
+          const rankA = rank[a.difficulty?.toUpperCase()] ?? 99;
+          const rankB = rank[b.difficulty?.toUpperCase()] ?? 99;
+          return rankA - rankB;
+        });
       }
       case "diff-desc": {
-        const rank = { EASY: 1, MEDIUM: 2, HARD: 3 };
-        return list.sort((a, b) => rank[b.difficulty] - rank[a.difficulty]);
+        const rank: Record<string, number> = { EASY: 1, MEDIUM: 2, HARD: 3 };
+        return list.sort((a, b) => {
+          const rankA = rank[a.difficulty?.toUpperCase()] ?? 0;
+          const rankB = rank[b.difficulty?.toUpperCase()] ?? 0;
+          return rankB - rankA;
+        });
       }
       case "popular":
         return list.sort((a, b) => (b.upvotes ?? 0) - (a.upvotes ?? 0));
@@ -513,8 +511,6 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
     SIX_MONTHS: "Past 6 Months",
     MORE_THAN_SIX_MONTHS: "Past Year (6+ Mo)",
   };
-
-  const currentSortLabel = SORT_OPTIONS.find((s) => s.id === sortBy)?.label || "Most Recent";
 
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -622,7 +618,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             setSearch(e.target.value);
             setCurrentPage(1);
           }}
-          placeholder="Search by title, number, topic..."
+          placeholder="Search problems, topics, number..."
           className="w-full pl-8 sm:pl-9 pr-14 sm:pr-18 py-2 sm:py-2.5 rounded-xl border border-border bg-card text-foreground text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all placeholder:text-muted-foreground shadow-2xs"
         />
 
@@ -648,112 +644,103 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. COMPACT TOOLBAR (COUNT + FILTERS + SORT + VIEW)                        */}
-      {/* One unified clean line - maximum screen space for actual questions        */}
+      {/* 3. CONTROLS TOOLBAR: FILTERS + SORT + VIEW                                */}
       {/* ========================================================================= */}
-      <div className="flex items-center justify-between gap-2 pt-0.5">
-        {/* Left: Total Questions Count */}
-        <div className="flex items-baseline gap-1.5 min-w-0">
-          <span className="text-xs sm:text-sm font-bold text-foreground">
-            {filteredProblems.length.toLocaleString()} Questions
-          </span>
-          {filteredProblems.length !== problems.length && (
-            <span className="text-[10px] sm:text-xs text-muted-foreground hidden xs:inline">
-              (of {problems.length.toLocaleString()})
+      <div className="flex items-center gap-2 pt-0.5">
+        {/* Filters Button */}
+        <button
+          type="button"
+          onClick={() => setIsFilterSheetOpen(true)}
+          className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
+            activeFilterCount > 0
+              ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
+              : "bg-card hover:bg-muted text-foreground border-border"
+          }`}
+        >
+          <SlidersHorizontal className="size-3.5 shrink-0" />
+          <span className="truncate">Filters</span>
+          {activeFilterCount > 0 && (
+            <span className="size-4.5 rounded-full bg-white text-primary text-[10px] font-extrabold flex items-center justify-center shrink-0">
+              {activeFilterCount}
             </span>
           )}
+        </button>
+
+        {/* Sort Select */}
+        <div className="relative flex-1 min-w-0">
+          <select
+            value={sortBy}
+            onChange={(e) => {
+              setSortBy(e.target.value as SortOptionType);
+              setCurrentPage(1);
+            }}
+            aria-label="Sort questions"
+            className="w-full appearance-none pl-7 pr-6 py-2 rounded-xl text-xs font-semibold border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-primary/40 truncate text-left"
+          >
+            {SORT_OPTIONS.map((opt) => (
+              <option key={opt.id} value={opt.id} className="bg-popover text-popover-foreground py-1 text-xs">
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <ArrowUpDown className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3 text-muted-foreground pointer-events-none" />
+          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground pointer-events-none" />
         </div>
 
-        {/* Right: Filters button + Sort dropdown + View Mode */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Filters Button */}
+        {/* View Mode Toggle */}
+        <div className="flex items-center gap-0.5 p-0.5 bg-muted/60 rounded-xl border border-border/70 shrink-0">
           <button
             type="button"
-            onClick={() => setIsFilterSheetOpen(true)}
-            className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
-              activeFilterCount > 0
-                ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
-                : "bg-card hover:bg-muted text-foreground border-border"
+            onClick={() => setViewMode("GRID")}
+            className={`p-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+              viewMode === "GRID"
+                ? "bg-card text-primary font-semibold shadow-2xs"
+                : "text-muted-foreground hover:text-foreground"
             }`}
+            title="Grid View"
           >
-            <SlidersHorizontal className="size-3.5 shrink-0" />
-            <span>Filters</span>
-            {activeFilterCount > 0 && (
-              <span className="size-4 rounded-full bg-white text-primary text-[9px] font-extrabold flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
+            <LayoutGrid className="size-3.5" />
           </button>
-
-          {/* Sort Dropdown Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-medium border border-border bg-card hover:bg-muted text-foreground transition-all cursor-pointer shadow-2xs"
-                />
-              }
-            >
-              <ArrowUpDown className="size-3 text-muted-foreground shrink-0" />
-              <span className="hidden md:inline text-muted-foreground">Sort:</span>
-              <span className="font-semibold truncate max-w-[85px] sm:max-w-[140px]">
-                {currentSortLabel}
-              </span>
-              <ChevronDown className="size-3 text-muted-foreground shrink-0" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 p-1.5">
-              <DropdownMenuLabel className="text-[11px] font-semibold text-muted-foreground uppercase px-2 py-1">
-                Sort Questions
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {SORT_OPTIONS.map((opt) => (
-                <DropdownMenuItem
-                  key={opt.id}
-                  onClick={() => setSortBy(opt.id)}
-                  className={`flex items-center justify-between text-xs px-2.5 py-2 rounded-lg cursor-pointer ${
-                    sortBy === opt.id ? "bg-primary/10 text-primary font-semibold" : ""
-                  }`}
-                >
-                  <span>{opt.label}</span>
-                  {sortBy === opt.id && <Check className="size-3.5 text-primary stroke-[2.5]" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* View Mode Toggle */}
-          <div className="flex items-center gap-0.5 p-0.5 bg-muted/60 rounded-lg sm:rounded-xl border border-border/70 shrink-0">
-            <button
-              type="button"
-              onClick={() => setViewMode("GRID")}
-              className={`p-1.5 rounded-md text-xs transition-all cursor-pointer ${
-                viewMode === "GRID"
-                  ? "bg-card text-primary font-semibold shadow-2xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              title="Grid View"
-            >
-              <LayoutGrid className="size-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode("LIST")}
-              className={`p-1.5 rounded-md text-xs transition-all cursor-pointer ${
-                viewMode === "LIST"
-                  ? "bg-card text-primary font-semibold shadow-2xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              title="List View"
-            >
-              <List className="size-3.5" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setViewMode("LIST")}
+            className={`p-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+              viewMode === "LIST"
+                ? "bg-card text-primary font-semibold shadow-2xs"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+            title="List View"
+          >
+            <List className="size-3.5" />
+          </button>
         </div>
       </div>
 
       {/* ========================================================================= */}
-      {/* 4. ACTIVE FILTERS CHIPS                                                   */}
+      {/* 4. TOTAL QUESTIONS COUNT (CLEAN, PROMINENT, UNCONSTRAINED ROW)            */}
+      {/* Never squished onto 2 lines, spacious and bold                            */}
+      {/* ========================================================================= */}
+      <div className="flex items-center justify-between pt-1 pb-0.5">
+        <div className="flex items-baseline gap-2">
+          <h2 className="text-sm sm:text-base font-bold text-foreground tracking-tight">
+            {filteredProblems.length.toLocaleString()} Questions
+          </h2>
+          {filteredProblems.length !== problems.length && (
+            <span className="text-[11px] text-muted-foreground">
+              (filtered from {problems.length.toLocaleString()})
+            </span>
+          )}
+        </div>
+
+        {difficultyFilter !== "ALL" && (
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-muted text-foreground border capitalize">
+            {difficultyFilter.toLowerCase()} only
+          </span>
+        )}
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 5. ACTIVE FILTERS CHIPS                                                   */}
       {/* Displayed directly above cards when any filter is active                  */}
       {/* ========================================================================= */}
       {(activeFilterCount > 0 || search.trim()) && (
@@ -763,7 +750,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           </span>
 
           {search.trim() && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
               <span>"{search}"</span>
               <button
                 type="button"
@@ -776,7 +763,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {difficultyFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
               <span>Difficulty: {difficultyFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -791,7 +778,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           {selectedTopics.map((topic) => (
             <span
               key={topic}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shrink-0"
+              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20 shrink-0"
             >
               <span>{topic}</span>
               <button
@@ -805,7 +792,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           ))}
 
           {timeframeFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
               <span>Time: {timeframeLabels[timeframeFilter]}</span>
               <button
                 type="button"
@@ -818,7 +805,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {platformFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0">
               <span>Platform: {getPlatformBadge(platformFilter as CodingPlatformType).label}</span>
               <button
                 type="button"
@@ -831,7 +818,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {statusFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
               <span>Status: {statusFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -844,7 +831,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           )}
 
           {sourceFilter !== "ALL" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-muted text-foreground border border-border shrink-0 capitalize">
               <span>Source: {sourceFilter.toLowerCase()}</span>
               <button
                 type="button"
@@ -867,7 +854,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       )}
 
       {/* ========================================================================= */}
-      {/* 5. PROBLEM LIST / GRID                                                    */}
+      {/* 6. PROBLEM LIST / GRID                                                    */}
       {/* Clean, uncrowded cards immediately visible on screen                      */}
       {/* ========================================================================= */}
       {sortedProblems.length === 0 ? (
@@ -1273,7 +1260,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       )}
 
       {/* ========================================================================= */}
-      {/* 6. ADVANCED FILTER SHEET (DRAWER ON DESKTOP, NATIVE BOTTOM SHEET ON MOBILE) */}
+      {/* 7. ADVANCED FILTER SHEET (DRAWER ON DESKTOP, NATIVE BOTTOM SHEET ON MOBILE) */}
       {/* ========================================================================= */}
       <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
         <SheetContent
