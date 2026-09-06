@@ -120,6 +120,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
   const router = useRouter();
   const searchParams = useSearchParams();
   const isBookmarksActive = searchParams.get("status") === "BOOKMARKED";
+  const activeCompanySlug = searchParams.get("company") || selectedCompanySlug || "google";
 
   // Group companies into defined categories
   const categorizedCompanies = useMemo(() => {
@@ -154,15 +155,15 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
   // Find which category contains the selected company
   const activeCategoryId = useMemo(() => {
     for (const cat of categorizedCompanies.categories) {
-      if (cat.items.some((c) => c.slug === selectedCompanySlug)) {
+      if (cat.items.some((c) => c.slug === activeCompanySlug)) {
         return cat.id;
       }
     }
-    if (categorizedCompanies.otherItems.some((c) => c.slug === selectedCompanySlug)) {
+    if (categorizedCompanies.otherItems.some((c) => c.slug === activeCompanySlug)) {
       return "__other";
     }
     return null;
-  }, [categorizedCompanies, selectedCompanySlug]);
+  }, [categorizedCompanies, activeCompanySlug]);
 
   const selectCompany = (slug: string) => {
     router.push(`/dashboard?company=${slug}`);
@@ -282,7 +283,7 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
             {/* Companies List */}
             <div className="space-y-1 pt-1">
               {filteredDrilldownItems.map((company) => {
-                const isActive = selectedCompanySlug === company.slug;
+                const isActive = activeCompanySlug === company.slug;
                 return (
                   <button
                     key={company.id}
@@ -495,9 +496,9 @@ export function KodePrepSidebar({ companies, selectedCompanySlug }: KodePrepSide
           type="button"
           onClick={() => {
             if (isBookmarksActive) {
-              router.push(`/dashboard${selectedCompanySlug ? `?company=${selectedCompanySlug}` : ""}`);
+              router.push(`/dashboard${activeCompanySlug ? `?company=${activeCompanySlug}` : ""}`);
             } else {
-              router.push(`/dashboard?status=BOOKMARKED${selectedCompanySlug ? `&company=${selectedCompanySlug}` : ""}`);
+              router.push(`/dashboard?status=BOOKMARKED${activeCompanySlug ? `&company=${activeCompanySlug}` : ""}`);
             }
             if (isMobile) setOpenMobile(false);
           }}

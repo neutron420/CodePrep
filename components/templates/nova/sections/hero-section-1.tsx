@@ -46,13 +46,38 @@ export default function HeroSection() {
 
           {/* Hero Content Container */}
           <div className="relative z-10 pt-28 pb-16 sm:pt-36 sm:pb-20 md:pt-40 md:pb-24">
-            {/* 1. Centered Header: Title, Description & CTA */}
-            <div className="mx-auto max-w-3xl px-6 text-center">
-              <h1 className="text-balance font-serif text-4xl font-medium sm:text-5xl md:text-6xl tracking-tight leading-[1.1]">
-                Crack interviews,
-                <br className="hidden sm:inline" /> company by company.
+            {/* 1. Centered Header: Announcement Badge, Title, Description & CTA */}
+            <div className="mx-auto max-w-4xl px-6 text-center">
+              {/* Top Announcement Badge: Thin, delicate orangish-white background with warm dotted border */}
+              <div className="flex justify-center mb-6 sm:mb-8">
+                <a
+                  href="https://x.com/RiteshS18572143"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border-[1.5px] border-dotted border-orange-300/90 hover:border-orange-500 bg-[#fffaf3] hover:bg-[#fff4e6] text-zinc-900 transition-all shadow-xs group"
+                >
+                  <span className="text-zinc-600 group-hover:text-zinc-900 text-[11.5px] sm:text-[12px] font-normal transition-colors leading-none">
+                    Advertise with
+                  </span>
+                  <Image
+                    src="/ritesh-avatar.png"
+                    alt="Ritesh Singh"
+                    width={16}
+                    height={16}
+                    className="size-4 rounded-full object-cover border border-orange-200 shrink-0"
+                  />
+                  <span className="text-zinc-950 group-hover:text-orange-950 text-[11.5px] sm:text-[12px] font-medium transition-colors leading-none">
+                    CodeCraft in Low Budget
+                  </span>
+                </a>
+              </div>
+
+              <h1 className="text-balance font-[family-name:var(--font-heading)] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal sm:font-medium tracking-[-0.035em] text-foreground leading-[1.12]">
+                Crack interviews,{" "}
+                <br className="hidden sm:inline" />
+                <span className="text-orange-500 font-normal sm:font-medium">company by company.</span>
               </h1>
-              <p className="text-muted-foreground mt-4 sm:mt-5 text-balance text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+              <p className="text-muted-foreground mt-4 sm:mt-5 text-balance text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
                 15,000+ interview questions &amp; 3,200+ DSA problems across 690+ companies, tagged by topic.
                 Tick off what you solve.
               </p>
@@ -166,8 +191,8 @@ export default function HeroSection() {
                     <Image
                       src="/banner1.png"
                       alt="CodeCraft Company-wise Interview Platform Preview"
-                      width={1448}
-                      height={934}
+                      width={1024}
+                      height={660}
                       priority
                       quality={95}
                       className="w-full h-auto block select-none"

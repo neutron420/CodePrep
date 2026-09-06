@@ -36,6 +36,7 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   --font-sans: var(--font-sans, ui-sans-serif, system-ui);
+  --font-heading: var(--font-heading, var(--font-sans, ui-sans-serif, system-ui));
   --font-serif: var(--font-sans, ui-sans-serif, system-ui);
   --font-mono: var(--font-mono, monospace);
   --radius: 0.625rem;
