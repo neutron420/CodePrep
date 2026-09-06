@@ -649,9 +649,14 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                                   className="size-5 sm:size-6 text-[9px] sm:text-xs rounded-md border border-border/60 cursor-pointer hover:scale-110 transition-transform"
                                 />
                                 {p.isCommunity && (
-                                  <span className="text-[11px] font-semibold text-foreground/90">
-                                    {c.name}
-                                  </span>
+                                  <div className="flex items-center gap-1.5 min-w-0">
+                                    <span className="text-[11px] font-semibold text-foreground/90 truncate">
+                                      {c.name}
+                                    </span>
+                                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                                      {p.submittedBy?.displayName ? `• by ${p.submittedBy.displayName}` : "• Anonymous"}
+                                    </span>
+                                  </div>
                                 )}
                               </div>
                             ))}
@@ -714,10 +719,10 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       ) : (
         /* List Table View - Horizontally scrollable on mobile */
         <div className="rounded-xl border bg-card overflow-x-auto">
-          <table className="w-full text-left text-xs min-w-[650px]">
+          <table className="w-full text-left text-xs min-w-[700px] sm:min-w-[760px]">
             <thead className="bg-secondary/40 text-muted-foreground uppercase font-medium border-b">
               <tr>
-                <th className="py-3 px-3 sm:px-4">Problem Title</th>
+                <th className="py-3 px-3 sm:px-4 min-w-[240px] sm:min-w-[300px]">Problem Title</th>
                 <th className="py-3 px-3 sm:px-4">Platform</th>
                 <th className="py-3 px-3 sm:px-4">Difficulty</th>
                 <th className="py-3 px-3 sm:px-4">Topics</th>
@@ -731,18 +736,25 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
                 const platformInfo = getPlatformBadge(p.platform);
                 return (
                   <tr key={p.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="py-3 px-3 sm:px-4 font-medium text-foreground">
-                      <div className="flex items-center gap-2">
-                        <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-4 shrink-0" />
-                        <div>
-                          <span className={solved ? "line-through text-muted-foreground" : ""}>
+                    <td className="py-3 px-3 sm:px-4 font-medium text-foreground min-w-[240px] sm:min-w-[300px]">
+                      <div className="flex items-start sm:items-center gap-2.5 min-w-0">
+                        <CodingPlatformIcon platform={p.platform || "LEETCODE"} className="size-4 shrink-0 mt-0.5 sm:mt-0" />
+                        <div className="min-w-0 flex flex-col gap-0.5">
+                          <span className={`leading-snug ${solved ? "line-through text-muted-foreground" : ""}`}>
                             {p.title}
                           </span>
-                          {p.roundType && (
-                            <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/60">
-                              {p.roundType}
-                            </span>
-                          )}
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            {p.roundType && (
+                              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/60 whitespace-nowrap">
+                                {p.roundType}
+                              </span>
+                            )}
+                            {p.isCommunity && (
+                              <span className="text-[10px] text-muted-foreground/80 whitespace-nowrap">
+                                • {p.submittedBy?.displayName ? `by ${p.submittedBy.displayName}` : "Anonymous"}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </td>

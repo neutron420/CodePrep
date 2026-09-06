@@ -110,6 +110,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     notes: string | null;
     upvotes: number;
     company?: { name: string; slug: string };
+    user?: { displayName: string | null; photoUrl: string | null } | null;
   }> = [];
 
   try {
@@ -126,6 +127,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           orderBy: [{ upvotes: "desc" }, { createdAt: "desc" }],
           include: {
             company: { select: { name: true, slug: true } },
+            user: { select: { displayName: true, photoUrl: true } },
           },
         })
       ),
@@ -169,6 +171,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     roundType: cp.roundType,
     notes: cp.notes,
     upvotes: cp.upvotes,
+    submittedBy: cp.user || null,
   }));
 
   // Combined problems: Community-reported interview questions first, then standard list

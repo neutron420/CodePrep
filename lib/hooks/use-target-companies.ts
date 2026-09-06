@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/context/auth-context";
 const STORAGE_KEY = "codecraft_target_companies";
 const EVENT_NAME = "codecraft_targets_updated";
 
-const DEFAULT_TARGETS: readonly string[] = ["google", "meta", "zeta"];
+const DEFAULT_TARGETS: readonly string[] = [];
 
 let memoryCache: readonly string[] = DEFAULT_TARGETS;
 let cachedRaw: string | null = null;

@@ -23,4 +23,5 @@ export interface ProblemItem {
   roundType?: string;
   notes?: string | null;
   upvotes?: number;
+  submittedBy?: { displayName: string | null; photoUrl: string | null } | null;
 }
