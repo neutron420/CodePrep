@@ -512,17 +512,17 @@ export function SubmitQuestionDialog({
         onOpenChange(val);
       }}
     >
-      <DialogContent className="max-w-[490px] w-[95vw] max-h-[88vh] flex flex-col p-0 gap-0 overflow-hidden rounded-2xl border-border bg-card shadow-2xl">
+      <DialogContent className="max-w-[480px] w-[94vw] max-h-[85dvh] sm:max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden rounded-xl sm:rounded-2xl border-border bg-card shadow-2xl">
         {/* Header - Fixed & Compact */}
-        <div className="p-4 sm:p-5 border-b border-border/80 bg-muted/20 shrink-0">
-          <div className="flex items-center gap-1.5 text-primary font-semibold text-xs tracking-wider uppercase">
-            <Users2 className="size-3.5" />
+        <div className="px-3.5 py-2.5 sm:px-5 sm:py-3.5 border-b border-border/80 bg-muted/20 shrink-0">
+          <div className="flex items-center gap-1.5 text-primary font-semibold text-[10px] sm:text-xs tracking-wider uppercase">
+            <Users2 className="size-3 sm:size-3.5" />
             <span>Community Question</span>
           </div>
-          <DialogTitle className="text-base sm:text-lg font-bold mt-1 tracking-tight text-foreground">
+          <DialogTitle className="text-sm sm:text-base font-bold mt-0.5 tracking-tight text-foreground">
             Share Interview Question
           </DialogTitle>
-          <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+          <DialogDescription className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-snug">
             Contribute questions asked in recent technical rounds & assessments
           </DialogDescription>
         </div>
@@ -531,14 +531,14 @@ export function SubmitQuestionDialog({
         <form
           id="submit-question-form"
           onSubmit={handleSubmit}
-          className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 no-scrollbar"
+          className="flex-1 overflow-y-auto px-3.5 py-3 sm:px-5 sm:py-4 space-y-2.5 sm:space-y-3.5 no-scrollbar"
         >
           {/* Row 1: Company Selector & Platform Selector Dropdowns */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             {/* 1. Searchable Company Dropdown */}
-            <div ref={companyDropdownRef} className="space-y-1.5 relative">
-              <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <Building2 className="size-3.5 text-primary shrink-0" />
+            <div ref={companyDropdownRef} className="space-y-1 relative">
+              <label className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5">
+                <Building2 className="size-3 sm:size-3.5 text-primary shrink-0" />
                 <span>Company <span className="text-rose-500">*</span></span>
               </label>
 
@@ -549,18 +549,18 @@ export function SubmitQuestionDialog({
                   setIsCompanyDropdownOpen((prev) => !prev);
                   setIsPlatformDropdownOpen(false);
                 }}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl border bg-background hover:bg-muted/40 transition-colors text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-2xs h-10 ${
+                className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl border bg-background hover:bg-muted/40 transition-colors text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-2xs h-9 sm:h-10 ${
                   isCompanyDropdownOpen ? "border-primary ring-2 ring-primary/20" : "border-border"
                 }`}
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <CompanyLogo name={selectedCompanyName || "Company"} className="size-5 rounded-md shrink-0" />
-                  <span className="text-xs font-semibold text-foreground truncate">
+                  <CompanyLogo name={selectedCompanyName || "Company"} className="size-4.5 sm:size-5 rounded shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-semibold text-foreground truncate">
                     {selectedCompanyName || "Select company..."}
                   </span>
                 </div>
                 <ChevronDown
-                  className={`size-3.5 text-muted-foreground shrink-0 transition-transform ${
+                  className={`size-3 sm:size-3.5 text-muted-foreground shrink-0 transition-transform ${
                     isCompanyDropdownOpen ? "rotate-180 text-primary" : ""
                   }`}
                 />
@@ -643,9 +643,9 @@ export function SubmitQuestionDialog({
             </div>
 
             {/* 2. Coding Platform Dropdown */}
-            <div ref={platformDropdownRef} className="space-y-1.5 relative">
-              <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <Code2 className="size-3.5 text-primary shrink-0" />
+            <div ref={platformDropdownRef} className="space-y-1 relative">
+              <label className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5">
+                <Code2 className="size-3 sm:size-3.5 text-primary shrink-0" />
                 <span>Coding Platform <span className="text-rose-500">*</span></span>
               </label>
 
@@ -656,13 +656,13 @@ export function SubmitQuestionDialog({
                   setIsPlatformDropdownOpen((prev) => !prev);
                   setIsCompanyDropdownOpen(false);
                 }}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl border bg-background hover:bg-muted/40 transition-colors text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-2xs h-10 ${
+                className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl border bg-background hover:bg-muted/40 transition-colors text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-2xs h-9 sm:h-10 ${
                   isPlatformDropdownOpen ? "border-primary ring-2 ring-primary/20" : "border-border"
                 }`}
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <CodingPlatformIcon platform={platform} className="size-4 shrink-0" />
-                  <span className="text-xs font-semibold text-foreground truncate">
+                  <CodingPlatformIcon platform={platform} className="size-3.5 sm:size-4 shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-semibold text-foreground truncate">
                     {currentPlatformOption.label}
                   </span>
                 </div>
@@ -671,7 +671,7 @@ export function SubmitQuestionDialog({
                     {currentPlatformOption.badge}
                   </span>
                   <ChevronDown
-                    className={`size-3.5 text-muted-foreground transition-transform ${
+                    className={`size-3 sm:size-3.5 text-muted-foreground transition-transform ${
                       isPlatformDropdownOpen ? "rotate-180 text-primary" : ""
                     }`}
                   />
@@ -716,8 +716,8 @@ export function SubmitQuestionDialog({
           </div>
 
           {/* Row 2: Problem Title */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">
+          <div className="space-y-1">
+            <label className="text-[11px] sm:text-xs font-semibold text-foreground">
               Problem Title <span className="text-rose-500">*</span>
             </label>
             <input
@@ -726,15 +726,15 @@ export function SubmitQuestionDialog({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Course Schedule IV or Minimum Swaps"
-              className="w-full h-10 px-3 text-xs sm:text-sm rounded-xl border border-border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+              className="w-full h-9 sm:h-10 px-3 text-xs sm:text-sm rounded-lg sm:rounded-xl border border-border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
             />
           </div>
 
           {/* Row 3: Problem URL (with Security Layer & Live Auto-Detection) */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+          <div className="space-y-1">
+            <label className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5">
               <LinkIcon className="size-3 text-muted-foreground" />
-              <span>Problem Link <span className="text-muted-foreground font-normal text-[11px]">(Optional)</span></span>
+              <span>Problem Link <span className="text-muted-foreground font-normal text-[10px] sm:text-[11px]">(Optional)</span></span>
             </label>
 
             <div className="relative">
@@ -743,7 +743,7 @@ export function SubmitQuestionDialog({
                 value={problemUrl}
                 onChange={(e) => handleUrlChange(e.target.value)}
                 placeholder="Paste link (e.g. https://leetcode.com/problems/...)"
-                className={`w-full h-10 px-3 text-xs rounded-xl border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 transition-all font-mono text-[11px] sm:text-xs ${
+                className={`w-full h-9 sm:h-10 px-3 text-xs rounded-lg sm:rounded-xl border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 transition-all font-mono text-[11px] sm:text-xs ${
                   urlError
                     ? "border-rose-500/80 focus:ring-rose-500/40 text-rose-600 dark:text-rose-400"
                     : "border-border focus:ring-primary/40 text-foreground"
@@ -773,11 +773,11 @@ export function SubmitQuestionDialog({
           </div>
 
           {/* Row 4: Difficulty & Interview Round (2 Columns) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             {/* Difficulty */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">Difficulty</label>
-              <div className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-muted/50 border border-border/80 h-10 items-center">
+            <div className="space-y-1">
+              <label className="text-[11px] sm:text-xs font-semibold text-foreground">Difficulty</label>
+              <div className="grid grid-cols-3 gap-1 p-1 rounded-lg sm:rounded-xl bg-muted/50 border border-border/80 h-9 sm:h-10 items-center">
                 {(["EASY", "MEDIUM", "HARD"] as const).map((diff) => {
                   const isSelected = difficulty === diff;
                   return (
@@ -785,7 +785,7 @@ export function SubmitQuestionDialog({
                       key={diff}
                       type="button"
                       onClick={() => setDifficulty(diff)}
-                      className={`h-7 text-[11px] font-semibold rounded-lg transition-all cursor-pointer capitalize flex items-center justify-center ${
+                      className={`h-6 sm:h-7 text-[10px] sm:text-[11px] font-semibold rounded-md sm:rounded-lg transition-all cursor-pointer capitalize flex items-center justify-center ${
                         isSelected
                           ? diff === "EASY"
                             ? "bg-emerald-500 text-white font-bold shadow-xs"
@@ -803,12 +803,12 @@ export function SubmitQuestionDialog({
             </div>
 
             {/* Round Type */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">Interview Round</label>
+            <div className="space-y-1">
+              <label className="text-[11px] sm:text-xs font-semibold text-foreground">Interview Round</label>
               <select
                 value={roundType}
                 onChange={(e) => setRoundType(e.target.value)}
-                className="w-full h-10 px-3 text-xs rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+                className="w-full h-9 sm:h-10 px-2.5 sm:px-3 text-[11px] sm:text-xs rounded-lg sm:rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
               >
                 {ROUND_OPTIONS.map((r) => (
                   <option key={r} value={r}>
@@ -820,9 +820,9 @@ export function SubmitQuestionDialog({
           </div>
 
           {/* Row 5: Topic Tags */}
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-foreground flex items-center gap-1">
+              <label className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1">
                 <Tag className="size-3 text-muted-foreground" />
                 <span>Topics <span className="text-rose-500">*</span></span>
               </label>
@@ -830,7 +830,7 @@ export function SubmitQuestionDialog({
             </div>
 
             {/* Quick Toggle Topics */}
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1 sm:gap-1.5">
               {COMMON_TOPICS.map((topic) => {
                 const isSelected = selectedTopics.includes(topic);
                 return (
@@ -838,7 +838,7 @@ export function SubmitQuestionDialog({
                     key={topic}
                     type="button"
                     onClick={() => toggleTopic(topic)}
-                    className={`text-[11px] px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                    className={`text-[10px] sm:text-[11px] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg border transition-all cursor-pointer ${
                       isSelected
                         ? "bg-primary text-primary-foreground font-semibold border-primary shadow-2xs"
                         : "bg-muted/30 hover:bg-muted text-muted-foreground border-border/80"
@@ -851,7 +851,7 @@ export function SubmitQuestionDialog({
             </div>
 
             {/* Add Custom Topic Input */}
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-2 pt-0.5">
               <input
                 type="text"
                 value={customTopicInput}
@@ -863,12 +863,12 @@ export function SubmitQuestionDialog({
                   }
                 }}
                 placeholder="+ Add custom tag..."
-                className="flex-1 h-8 px-3 text-xs rounded-lg border border-border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                className="flex-1 h-7 sm:h-8 px-2.5 text-[11px] sm:text-xs rounded-lg border border-border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               />
               <button
                 type="button"
                 onClick={addCustomTopic}
-                className="h-8 px-3 text-xs rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium cursor-pointer border border-border"
+                className="h-7 sm:h-8 px-2.5 text-[11px] sm:text-xs rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium cursor-pointer border border-border"
               >
                 Add
               </button>
@@ -876,47 +876,47 @@ export function SubmitQuestionDialog({
           </div>
 
           {/* Row 6: Interview Notes / Constraints (Optional) */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground flex items-center gap-1">
+          <div className="space-y-1">
+            <label className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1">
               <BookOpen className="size-3 text-muted-foreground" />
-              <span>Interview Notes & Follow-ups <span className="text-muted-foreground font-normal text-[11px]">(Optional)</span></span>
+              <span>Interview Notes & Follow-ups <span className="text-muted-foreground font-normal text-[10px] sm:text-[11px]">(Optional)</span></span>
             </label>
             <textarea
               rows={2}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Constraints N <= 10^5, interviewer asked follow-up to optimize space to O(1)..."
-              className="w-full px-3 py-2 text-xs rounded-xl border border-border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none transition-all leading-relaxed"
+              placeholder="e.g. Constraints N <= 10^5, interviewer asked follow-up to optimize space..."
+              className="w-full px-2.5 py-1.5 text-[11px] sm:text-xs rounded-lg sm:rounded-xl border border-border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none transition-all leading-relaxed"
             />
           </div>
 
           {/* Row 7: Anonymous Toggle */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/70">
-            <div className="flex items-center gap-2.5">
-              <Lock className="size-4 text-muted-foreground" />
+          <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-muted/30 border border-border/70">
+            <div className="flex items-center gap-2">
+              <Lock className="size-3.5 text-muted-foreground" />
               <div className="flex flex-col text-left">
-                <span className="text-xs font-medium text-foreground">Post Anonymously</span>
-                <span className="text-[10px] text-muted-foreground">Do not show your profile name with this question</span>
+                <span className="text-[11px] sm:text-xs font-medium text-foreground">Post Anonymously</span>
+                <span className="text-[9px] sm:text-[10px] text-muted-foreground">Do not show your profile name with this question</span>
               </div>
             </div>
             <input
               type="checkbox"
               checked={isAnonymous}
               onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="size-4 rounded accent-primary cursor-pointer"
+              className="size-3.5 sm:size-4 rounded accent-primary cursor-pointer"
             />
           </div>
         </form>
 
         {/* Footer - Fixed & Sticky */}
-        <div className="p-3 sm:p-4 border-t border-border bg-muted/20 shrink-0 flex items-center justify-end gap-2.5">
+        <div className="px-3.5 py-2 sm:px-4 sm:py-3 border-t border-border bg-muted/20 shrink-0 flex items-center justify-end gap-2">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={() => onOpenChange(false)}
             disabled={isPending}
-            className="text-xs cursor-pointer h-9 px-4 rounded-xl"
+            className="text-[11px] sm:text-xs cursor-pointer h-8 sm:h-9 px-3 sm:px-4 rounded-lg sm:rounded-xl"
           >
             Cancel
           </Button>
@@ -925,16 +925,16 @@ export function SubmitQuestionDialog({
             form="submit-question-form"
             size="sm"
             disabled={isPending || !title.trim()}
-            className="text-xs font-semibold cursor-pointer gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 rounded-xl shadow-xs"
+            className="text-[11px] sm:text-xs font-semibold cursor-pointer gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 h-8 sm:h-9 px-3 sm:px-4 rounded-lg sm:rounded-xl shadow-xs"
           >
             {isPending ? (
               <>
-                <Loader2 className="size-3.5 animate-spin" />
+                <Loader2 className="size-3 sm:size-3.5 animate-spin" />
                 <span>Submitting...</span>
               </>
             ) : (
               <>
-                <Plus className="size-3.5" />
+                <Plus className="size-3 sm:size-3.5" />
                 <span>Share Question</span>
               </>
             )}

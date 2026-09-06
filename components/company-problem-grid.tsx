@@ -219,7 +219,7 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
       const res = await fetch(`/api/submissions/${realId}/upvote`, { method: "POST" });
       const data = await res.json().catch(() => ({}));
       if (res.ok && !data.alreadyVoted) {
-        toast.success("Verified question (+1)!");
+        toast.success("Verified question!");
       } else if (data.alreadyVoted) {
         toast.info("You've already verified this question.");
       }

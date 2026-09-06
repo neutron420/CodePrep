@@ -48,7 +48,7 @@ Instead of solving problems randomly, CodeCraft lets you focus on the exact ques
   </tr>
   <tr>
     <td align="center">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" width="30" /><br /><sub>Next.js 16</sub>
+      <img src="https://cdn.simpleicons.org/nextdotjs/white" width="30" /><br /><sub>Next.js 16</sub>
     </td>
     <td align="center">
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="30" /><br /><sub>PostgreSQL</sub>
@@ -57,7 +57,7 @@ Instead of solving problems randomly, CodeCraft lets you focus on the exact ques
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-original.svg" width="30" /><br /><sub>Firebase Auth</sub>
     </td>
     <td align="center">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg" width="30" /><br /><sub>Vercel</sub>
+      <img src="https://cdn.simpleicons.org/vercel/white" width="30" /><br /><sub>Vercel</sub>
     </td>
   </tr>
   <tr>
@@ -79,13 +79,13 @@ Instead of solving problems randomly, CodeCraft lets you focus on the exact ques
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width="30" /><br /><sub>TypeScript 5</sub>
     </td>
     <td align="center">
-      <img src="https://neon.tech/favicon/favicon-32x32.png" width="30" /><br /><sub>Neon DB</sub>
+      <img src="https://cdn.simpleicons.org/neon" width="30" /><br /><sub>Neon DB</sub>
     </td>
     <td align="center">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="30" /><br /><sub>GitHub OAuth</sub>
+      <img src="https://cdn.simpleicons.org/github/white" width="30" /><br /><sub>GitHub OAuth</sub>
     </td>
     <td align="center">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" width="30" /><br /><sub>npm / bun</sub>
+      <img src="https://cdn.simpleicons.org/bun" width="30" /><br /><sub>npm / bun</sub>
     </td>
   </tr>
   <tr>
