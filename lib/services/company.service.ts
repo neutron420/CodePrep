@@ -15,7 +15,7 @@ export async function listCompanies(query: ListCompaniesQuery) {
     id: company.id,
     name: company.name,
     slug: company.slug,
-    problemCount: company._count.problems,
+    problemCount: (company._count.problems ?? 0) + (company._count.communityProblems ?? 0),
   }));
 
   return { data, pagination: buildPagination(total, page, limit) };
@@ -32,7 +32,7 @@ export async function getCompanyBySlug(slug: string) {
       id: company.id,
       name: company.name,
       slug: company.slug,
-      problemCount: company._count.problems,
+      problemCount: (company._count.problems ?? 0) + (company._count.communityProblems ?? 0),
     },
   };
 }

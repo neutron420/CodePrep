@@ -28,7 +28,7 @@ export function findCompanies(params: CompanyListParams) {
         id: true,
         name: true,
         slug: true,
-        _count: { select: { problems: true } },
+        _count: { select: { problems: true, communityProblems: true } },
       },
     })
   );
@@ -47,7 +47,7 @@ export function findCompanyBySlug(slug: string) {
         id: true,
         name: true,
         slug: true,
-        _count: { select: { problems: true } },
+        _count: { select: { problems: true, communityProblems: true } },
       },
     })
   );

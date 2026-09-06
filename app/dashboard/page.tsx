@@ -19,6 +19,7 @@ export const metadata = {
 };
 
 import { NavbarSearch } from "@/components/navbar-search";
+import { NavbarShareButton } from "@/components/navbar-share-button";
 import { TargetCompaniesBar } from "@/components/target-companies-bar";
 import { UserNav } from "@/components/user-nav";
 import { AuthGuard } from "@/components/auth-guard";
@@ -53,7 +54,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
   const { company: selectedSlugParam } = await searchParams;
 
   // 1. Fetch all companies for sidebar
-  let allCompaniesRaw: { id: number; name: string; slug: string; _count: { problems: number } }[] = [];
+  let allCompaniesRaw: { id: number; name: string; slug: string; _count: { problems: number; communityProblems?: number } }[] = [];
   try {
     allCompaniesRaw = await withDbRetry(() =>
       prisma.company.findMany({
@@ -61,7 +62,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
           id: true,
           name: true,
           slug: true,
-          _count: { select: { problems: true } },
+          _count: { select: { problems: true, communityProblems: true } },
         },
         orderBy: { problems: { _count: "desc" } },
       })
@@ -74,12 +75,12 @@ export default async function DashboardPage({ searchParams }: PageProps) {
     id: c.id,
     name: c.name,
     slug: c.slug,
-    problemCount: c._count.problems,
+    problemCount: (c._count.problems ?? 0) + (c._count.communityProblems ?? 0),
   }));
 
   // Determine active company slug (default to "google" or first available company)
   const activeSlug = selectedSlugParam || sidebarCompanies[0]?.slug || "google";
-  let activeCompany: { id: number; name: string; slug: string; _count: { problems: number } } | null = null;
+  let activeCompany: { id: number; name: string; slug: string; _count: { problems: number; communityProblems?: number } } | null = null;
   try {
     activeCompany = await findCompanyBySlug(activeSlug);
   } catch (err) {
@@ -92,7 +93,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       id: 1,
       name: activeSlug.charAt(0).toUpperCase() + activeSlug.slice(1),
       slug: activeSlug,
-      _count: { problems: 0 },
+      _count: { problems: 0, communityProblems: 0 },
     };
   }
 
@@ -213,6 +214,12 @@ export default async function DashboardPage({ searchParams }: PageProps) {
             <NavbarSearch
               companies={sidebarCompanies}
               currentCompanySlug={activeCompany.slug}
+            />
+
+            {/* Share Interview Question Button */}
+            <NavbarShareButton
+              companySlug={activeCompany.slug}
+              companyName={activeCompany.name}
             />
 
             {/* Authentication & User Profile */}

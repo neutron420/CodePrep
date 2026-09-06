@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import {
   ExternalLink,
   Search,
@@ -32,7 +31,6 @@ import {
   Zap,
   Building2,
   Star,
-  Plus,
   ThumbsUp,
 } from "lucide-react";
 import { useSolvedProblems } from "@/lib/hooks/use-solved-problems";
@@ -44,7 +42,6 @@ import { CompanyTooltip } from "@/components/company-tooltip";
 import { getCompanyDomain } from "@/lib/company-domains";
 import { COMPANY_CATEGORIES } from "@/lib/company-categories";
 import { getCompanyDetail } from "@/lib/company-details";
-import { SubmitQuestionDialog } from "@/components/submit-question-dialog";
 import { CodingPlatformIcon } from "@/components/coding-platform-icon";
 import { toast } from "sonner";
 
@@ -165,13 +162,11 @@ interface CompanyProblemGridProps {
 }
 
 export function CompanyProblemGrid({ problems, companyName, companySlug }: CompanyProblemGridProps) {
-  const router = useRouter();
   const [search, setSearch] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState<string>("ALL");
   const [sourceFilter, setSourceFilter] = useState<"ALL" | "CURATED" | "COMMUNITY">("ALL");
   const [viewMode, setViewMode] = useState<"GRID" | "LIST">("GRID");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const [upvotesState, setUpvotesState] = useState<Record<number, number>>({});
   const [votedIds, setVotedIds] = useState<Set<number>>(() => {
     if (typeof window === "undefined") return new Set();
@@ -367,18 +362,8 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
             </div>
           </div>
 
-          {/* Right Actions: Share Question & Pin Target */}
-          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0 flex-wrap">
-            <button
-              type="button"
-              onClick={() => setIsSubmitOpen(true)}
-              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold border border-primary/20 transition-all shadow-2xs cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95"
-              title="Share an interview question asked recently"
-            >
-              <Plus className="size-3.5 shrink-0" />
-              <span>Share Question</span>
-            </button>
-
+          {/* Right Action: Pin Target */}
+          <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
             <button
               type="button"
               onClick={() => toggleTarget(slug)}
@@ -896,17 +881,6 @@ export function CompanyProblemGrid({ problems, companyName, companySlug }: Compa
           </div>
         </div>
       )}
-
-      {/* Crowdsource Question Submission Dialog */}
-      <SubmitQuestionDialog
-        open={isSubmitOpen}
-        onOpenChange={setIsSubmitOpen}
-        companySlug={slug}
-        companyName={companyName}
-        onSuccess={() => {
-          router.refresh();
-        }}
-      />
     </div>
   );
 }
